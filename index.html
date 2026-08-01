@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Team Directory Hub - Pherk v2</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Germania+One&family=Koulen&family=Siemreap&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'GermaniaOne-Local';
+      src: url('GermaniaOne-Regular.ttf') format('truetype'),
+           url('file:///E:/Code/GermaniaOne-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Koulen-Local';
+      src: url('Koulen-Regular.ttf') format('truetype'),
+           url('file:///E:/Code/Koulen-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Siemreap-Local';
+      src: url('Siemreap-Regular.ttf') format('truetype'),
+           url('file:///E:/Code/Siemreap-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #08090e;
+      color: #f4f4f5;
+    }
+
+    .cool-title-font {
+      font-family: 'GermaniaOne-Local', 'Germania One', cursive, sans-serif;
+    }
+
+    .khmer-font {
+      font-family: 'Siemreap-Local', 'Siemreap', 'Koulen-Local', 'Koulen', sans-serif;
+    }
+
+    * { 
+      -webkit-tap-highlight-color: transparent; 
+    }
+    
+    .pb-safe { padding-bottom: env(safe-area-inset-bottom, 1rem); }
+    .pt-safe { padding-top: env(safe-area-inset-top, 1rem); }
+
+    .cool-glass-card {
+      background: rgba(18, 20, 29, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .cool-glass-card:hover {
+      border-color: rgba(129, 140, 248, 0.35);
+      box-shadow: 0 10px 35px -5px rgba(99, 102, 241, 0.25);
+    }
+
+    @keyframes backdropIn {
+      from { opacity: 0; backdrop-filter: blur(0px); }
+      to { opacity: 1; backdrop-filter: blur(24px); }
+    }
+    @keyframes backdropOut {
+      from { opacity: 1; backdrop-filter: blur(24px); }
+      to { opacity: 0; backdrop-filter: blur(0px); }
+    }
+
+    @keyframes sheetIn {
+      from { transform: translateY(100%) scale(0.94); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    @keyframes sheetOut {
+      from { transform: translateY(0) scale(1); opacity: 1; }
+      to { transform: translateY(100%) scale(0.94); opacity: 0; }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes zoomOut {
+      from { transform: scale(1); opacity: 1; }
+      to { transform: scale(0.85); opacity: 0; }
+    }
+
+    @keyframes toastFadeOut {
+      from { opacity: 1; transform: translateY(0) scale(1); filter: blur(0px); }
+      to { opacity: 0; transform: translateY(10px) scale(0.94); filter: blur(4px); }
+    }
+
+    .animate-backdrop-in { animation: backdropIn 0.22s ease-out forwards; }
+    .animate-backdrop-out { animation: backdropOut 0.18s ease-in forwards; }
+    .animate-sheet-in { animation: sheetIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-sheet-out { animation: sheetOut 0.18s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
+    .animate-zoom-in { animation: zoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-zoom-out { animation: zoomOut 0.18s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
+    .animate-toast-out { animation: toastFadeOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    .glow-indigo { box-shadow: 0 0 20px -3px rgba(99, 102, 241, 0.45); }
+    .glow-cyan { box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.45); }
+    .glow-fuchsia { box-shadow: 0 0 20px -3px rgba(217, 70, 239, 0.45); }
+    .glow-amber { box-shadow: 0 0 22px -2px rgba(245, 158, 11, 0.55); }
+
+    @keyframes riseBubble {
+      0% { transform: translateY(12px) scale(0.4); opacity: 0; }
+      50% { opacity: 0.9; }
+      100% { transform: translateY(-16px) scale(1.1); opacity: 0; }
+    }
+
+    .beer-bubble-1 { animation: riseBubble 1.2s infinite ease-in 0.1s; }
+    .beer-bubble-2 { animation: riseBubble 1.5s infinite ease-in 0.3s; }
+    .beer-bubble-3 { animation: riseBubble 1.0s infinite ease-in 0.5s; }
+
+    @keyframes foamSlosh {
+      0%, 100% { transform: scaleY(1) translateY(0); }
+      50% { transform: scaleY(1.15) translateY(-1px); }
+    }
+
+    .foam-slosh { animation: foamSlosh 1.8s infinite ease-in-out; }
+
+    @keyframes cheersPop {
+      0% { transform: scale(1) rotate(0deg); }
+      30% { transform: scale(1.3) rotate(-18deg); }
+      60% { transform: scale(1.18) rotate(12deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .animate-cheers { animation: cheersPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(10, 11, 16, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(63, 63, 70, 0.8);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.8);
+    }
+  </style>
+</head>
+<body class="bg-[#08090e] text-zinc-100 min-h-screen antialiased relative overflow-x-hidden selection:bg-indigo-500 selection:text-white">
+
+  <div class="fixed top-[-10%] left-[-10%] w-[480px] h-[480px] bg-indigo-600/15 rounded-full blur-[140px] pointer-events-none z-0"></div>
+  <div class="fixed bottom-[-10%] right-[-10%] w-[480px] h-[480px] bg-indigo-500/10 rounded-full blur-[140px] pointer-events-none z-0"></div>
+  <div class="fixed top-[40%] right-[10%] w-[380px] h-[380px] bg-fuchsia-600/15 rounded-full blur-[130px] pointer-events-none z-0"></div>
+
+  <!-- Background Particle Canvas -->
+  <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+
+  <div id="root" class="relative z-10"></div>
+
+  <script type="text/babel">
+    let sharedAudioCtx = null;
+
+    const getAudioContext = () => {
+      if (!sharedAudioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          sharedAudioCtx = new AudioContextClass();
+        }
+      }
+      if (sharedAudioCtx && sharedAudioCtx.state === 'suspended') {
+        sharedAudioCtx.resume();
+      }
+      return sharedAudioCtx;
+    };
+
+    const playGlassClinkSound = () => {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+
+        const now = ctx.currentTime;
+        const pitchVariation = (Math.random() - 0.5) * 160;
+
+        const osc = ctx.createOscillator();
+        const oscGain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(2400 + pitchVariation, now);
+        osc.frequency.exponentialRampToValueAtTime(1200 + pitchVariation, now + 0.32);
+
+        oscGain.gain.setValueAtTime(0.35, now);
+        oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+
+        osc.connect(oscGain);
+        oscGain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.32);
+
+        const bufferSize = Math.floor(ctx.sampleRate * 0.08);
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const output = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+
+        const whiteNoise = ctx.createBufferSource();
+        whiteNoise.buffer = buffer;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 4800;
+
+        const noiseGain = ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.07, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+
+        whiteNoise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(ctx.destination);
+
+        whiteNoise.start(now);
+      } catch (err) {
+        // Fallback gracefully
+      }
+    };
+
+    const { useState, useEffect, useMemo, useCallback, useRef } = React;
+
+    const INITIAL_MEMBERS = [
+      {
+        id: 1,
+        name: "YN Taingo",
+        email: "Faa.Zzy",
+        role: "Pherk Klang",
+        status: "Active",
+        avatar: "images/photo1",
+        bio: "Nov Mneak eng yu pek jong kert stek arom",
+        skills: ["Royalty", "Superman", "Cutie"],
+        socials: {
+          instagram: "fxa_zxy1226",
+          instagramUrl: "https://www.instagram.com/fxa_zxy1226/",
+          facebook: "faazzy2002",
+          facebookUrl: "https://web.facebook.com/faazzy2002/",
+          tiktok: "@fazy1226",
+          tiktokUrl: "https://www.tiktok.com/@fazy1226"
+        }
+      },
+      {
+        id: 2,
+        name: "Chhai Be",
+        email: "Blew2.2",
+        role: "Pherk Klang",
+        status: "Active",
+        avatar: "images/photo5",
+        bio: "ប៊ីស្ដេច HeV",
+        skills: ["Loyalty", "SdachPherk", "KiloPro"],
+        socials: {
+          instagram: "blew.w2",
+          instagramUrl: "https://www.instagram.com/blew.w2",
+          facebook: "61577817960214",
+          facebookUrl: "https://web.facebook.com/profile.php?id=61577817960214",
+          tiktok: "@blew2.2",
+          tiktokUrl: "https://www.tiktok.com/@blew2.2"
+        }
+      },
+      {
+        id: 3,
+        name: "Lot Chhayhong",
+        email: "Chhay.Hong",
+        role: "Pherk Orn",
+        status: "Active",
+        avatar: "images/photo7",
+        bio: "ផឹកៗម៉ែហៅទៅផ្ទះ",
+        skills: ["Gamer", "SdachVai", "No Relationship"],
+        socials: {
+          instagram: "whois.hong",
+          instagramUrl: "https://www.instagram.com/whois.hong/",
+          facebook: "lot.chhayhong.2025",
+          facebookUrl: "https://web.facebook.com/lot.chhayhong.2025",
+          tiktok: "@cas_super12",
+          tiktokUrl: "https://www.tiktok.com/@cas_super12"
+        }
+      },
+      {
+        id: 4,
+        name: "Vouykhang",
+        email: "Yip Vouykhang",
+        role: "Sdach Cy",
+        status: "Active",
+        avatar: "images/photo10",
+        bio: "ផឹកសុខៗ ទៅផ្ទះតាមអារម្មណ៍",
+        skills: ["Gamer", "Pherk Lg Game", "No Relationship"],
+        socials: {
+          instagram: "yipvouykhang",
+          instagramUrl: "https://www.instagram.com/yipvouykhang/",
+          facebook: "yip.vouykhang",
+          facebookUrl: "https://web.facebook.com/yip.vouykhang",
+          tiktok: "@yipvouykhang",
+          tiktokUrl: "https://www.tiktok.com/@yipvouykhang"
+        }
+      },
+      {
+        id: 5,
+        name: "MengThai",
+        email: "Doung MengThaizz",
+        role: "Pherk Orn",
+        status: "Active",
+        avatar: "images/photo8",
+        bio: "មនុស្ស Introvert",
+        skills: ["Ot Jes Pherk", "Smos"],
+        socials: {
+          facebook: "MengThaizz",
+          facebookUrl: "https://web.facebook.com/MengThaizz"
+        }
+      },
+      {
+        id: 6,
+        name: "Meng Hong",
+        email: "Hong ChingChong",
+        role: "Pherk Klang",
+        status: "Active",
+        avatar: "images/photo2",
+        bio: "ខ្ញុំ Introvert អត់ហ៊ានអេដទៅមុនទេ,តែអេដមកខនហ្វើមភ្លាម",
+        skills: ["Loyalty", "Funny"],
+        socials: {
+          instagram: "hong_chingchongdingdong",
+          instagramUrl: "https://www.instagram.com/hong_chingchongdingdong/",
+          facebook: "meng.hong.835346",
+          facebookUrl: "https://web.facebook.com/meng.hong.835346",
+          tiktok: "@selfishmf",
+          tiktokUrl: "https://www.tiktok.com/@selfishmf"
+        }
+      },
+      {
+        id: 7,
+        name: "Fuu Lin",
+        email: "Ah k'mab Cute",
+        role: "Sdach Cy",
+        status: "Active",
+        avatar: "images/photo11",
+        bio: "ផឹកសុខៗ ល្បិចម៉ែ Call ហៅទៅផ្ទះ",
+        skills: ["Pherk Ster", "Cute", "Sava And Sdach Vai"],
+        socials: {
+          facebook: "linkilozinn",
+          facebookUrl: "https://web.facebook.com/linkilozinn",
+          tiktok: "@tryagainlater092",
+          tiktokUrl: "https://www.tiktok.com/@tryagainlater092"
+        }
+      },
+      {
+        id: 8,
+        name: "Vea Sna",
+        email: "Sna.Sna",
+        role: "Pherk Orn",
+        status: "Active",
+        avatar: "images/photo9",
+        bio: "ផឹកលឿន​ សន្លប់ក៏លឿន",
+        skills: ["Pherk Ster", "Smos"],
+        socials: {
+          facebook: "MengThaizz",
+          facebookUrl: "https://web.facebook.com/MengThaizz",
+          tiktok: "@thesadness1234",
+          tiktokUrl: "https://www.tiktok.com/@thesadness1234"
+        }
+      },
+      {
+        id: 9,
+        name: "BW Lyching",
+        email: "Ly.ching",
+        role: "Sdach Cy",
+        status: "Active",
+        avatar: "images/photo12",
+        bio: "សុភាពណាស់",
+        skills: ["Cute", "6 7"],
+        socials: {
+          facebook: "bw.lyching",
+          facebookUrl: "https://web.facebook.com/bw.lyching"
+        }
+      },
+      {
+        id: 10,
+        name: "Yong Sin",
+        email: "CH YongSin",
+        role: "Pherk Klang",
+        status: "Active",
+        avatar: "images/photo3",
+        bio: "ខ្ញុំបាទអធិរាជវ៉ៃសិច ទិសខាងត្បូង",
+        skills: ["Loyalty", "Smos", "KiloPro"],
+        socials: {
+          instagram: "sin_smos_jm",
+          instagramUrl: "https://www.instagram.com/sin_smos_jm",
+          facebook: "yongshin.chao",
+          facebookUrl: "https://web.facebook.com/yongshin.chao",
+          tiktok: "@sinn093",
+          tiktokUrl: "https://www.tiktok.com/@sinn093"
+        }
+      },
+      {
+        id: 11,
+        name: "Yuth",
+        email: "Vireak Yuth",
+        role: "Pherk Klang",
+        status: "Active",
+        avatar: "images/photo4",
+        bio: "ខ្ញុំបាទយុទស្ដេចផឹក",
+        skills: ["Pherk", "Smos", "SdachSad"],
+        socials: {
+          facebook: "idk.anna.79",
+          facebookUrl: "https://web.facebook.com/idk.anna.79"
+        }
+      },
+      {
+        id: 12,
+        name: "Rithpanhareach",
+        email: "Ngov Rithpanhareach",
+        role: "Pherk Klang",
+        status: "Active",
+        avatar: "images/photo6",
+        bio: "អាណាខ្លាំងផឹកចូលមក",
+        skills: ["Loyalty", "SdachPherk", "SdachVai"],
+        socials: {
+          instagram: "reach.psd",
+          instagramUrl: "https://www.instagram.com/reach.psd",
+          facebook: "panha.reach.5030",
+          facebookUrl: "https://web.facebook.com/panha.reach.5030",
+          tiktok: "@reach_345",
+          tiktokUrl: "https://www.tiktok.com/@reach_345"
+        }
+      }
+    ];
+
+    const Toast = ({ toast, onClose }) => {
+      const [isExiting, setIsExiting] = useState(false);
+
+      useEffect(() => {
+        if (!toast) return;
+        setIsExiting(false);
+
+        const timer = setTimeout(() => {
+          setIsExiting(true);
+        }, 3000);
+
+        return () => clearTimeout(timer);
+      }, [toast?.id]);
+
+      useEffect(() => {
+        if (isExiting) {
+          const exitTimer = setTimeout(() => {
+            onClose();
+            setIsExiting(false);
+          }, 300);
+          return () => clearTimeout(exitTimer);
+        }
+      }, [isExiting, onClose]);
+
+      if (!toast) return null;
+
+      return (
+        <div 
+          className={`fixed bottom-6 right-6 z-[250] px-4 py-3 rounded-2xl bg-zinc-900/95 border border-amber-500/40 text-amber-300 backdrop-blur-2xl shadow-[0_12px_40px_-8px_rgba(245,158,11,0.35)] flex items-center gap-3.5 pointer-events-none transition-all ${
+            isExiting ? 'animate-toast-out' : 'animate-sheet-in'
+          }`}
+        >
+          <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm shadow-[0_0_14px_rgba(245,158,11,0.45)]">
+            🍻
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[9px] uppercase font-black tracking-wider text-amber-400">CHEER BOOST</span>
+            <span className="text-xs font-extrabold text-white tracking-wide">{toast.message}</span>
+          </div>
+        </div>
+      );
+    };
+
+    const BigPhotoViewerModal = ({ photoData, onClose, onError }) => {
+      const [isClosing, setIsClosing] = useState(false);
+
+      const handleClose = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+          onClose();
+          setIsClosing(false);
+        }, 180);
+      };
+
+      useEffect(() => {
+        const handleKeyDown = (e) => {
+          if (e.key === 'Escape') handleClose();
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+      }, []);
+
+      if (!photoData) return null;
+
+      return (
+        <div
+          onClick={handleClose}
+          className={`fixed inset-0 z-[300] w-screen h-screen flex items-center justify-center bg-[#05060a]/94 backdrop-blur-3xl p-4 sm:p-8 select-none ${
+            isClosing ? 'animate-backdrop-out' : 'animate-backdrop-in'
+          }`}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className={`relative max-w-2xl w-full cool-glass-card rounded-3xl p-4 sm:p-6 border border-white/15 shadow-[0_30px_90px_rgba(0,0,0,0.95)] flex flex-col items-center space-y-4 ${
+              isClosing ? 'animate-zoom-out' : 'animate-zoom-in'
+            }`}
+          >
+            {/* Modal Header Bar */}
+            <div className="w-full flex items-center justify-between border-b border-zinc-800/80 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-black text-white">{photoData.name}</h3>
+                  <span className="text-[10px] uppercase font-bold text-indigo-400 tracking-wider">High Resolution View</span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleClose}
+                className="text-zinc-400 hover:text-white bg-zinc-800/80 hover:bg-zinc-700/80 p-2.5 rounded-full transition-all border border-zinc-700/60 active:scale-95"
+                title="Close Photo (Esc)"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Big Photo Container */}
+            <div className="w-full max-h-[70vh] flex items-center justify-center rounded-2xl bg-zinc-950/80 border border-zinc-800/90 p-2 overflow-hidden shadow-2xl relative group">
+              <img
+                src={photoData.src}
+                alt={photoData.name}
+                onError={(e) => onError(e, photoData.member)}
+                className="max-w-full max-h-[65vh] object-contain rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-[1.02]"
+              />
+            </div>
+
+            {/* Modal Bottom Action Bar */}
+            <div className="w-full flex items-center justify-between pt-1">
+              <span className="text-[11px] text-zinc-400 font-medium">
+                Tap outside or press <kbd className="px-1.5 py-0.5 bg-zinc-800 border border-zinc-700 rounded text-[9px] font-mono text-zinc-300">Esc</kbd> to exit
+              </span>
+
+              <button
+                onClick={handleClose}
+                className="px-5 py-2 bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 hover:from-indigo-600 hover:to-violet-700 active:scale-95 text-white text-xs font-black rounded-xl transition-all shadow-md shadow-indigo-500/20"
+              >
+                Close Viewer
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    function MemberDashboard() {
+      const [members, setMembers] = useState(INITIAL_MEMBERS);
+      const [searchTerm, setSearchTerm] = useState('');
+      const [activeFilter, setActiveFilter] = useState('All');
+      const [selectedMember, setSelectedMember] = useState(null);
+      const [expandedPhoto, setExpandedPhoto] = useState(null);
+      const [isClosing, setIsClosing] = useState(false);
+      const [toast, setToast] = useState(null);
+      const [sessionBoost, setSessionBoost] = useState(0);
+
+      const [cheersCount, setCheersCount] = useState(() => {
+        const saved = localStorage.getItem('pherk_beer_cheers');
+        return saved ? parseInt(saved, 10) : 0;
+      });
+      const [isClinking, setIsClinking] = useState(false);
+      const [isDecaying, setIsDecaying] = useState(false);
+
+      useEffect(() => {
+        localStorage.setItem('pherk_beer_cheers', cheersCount.toString());
+      }, [cheersCount]);
+
+      useEffect(() => {
+        const decayIntervalMs = 900;
+        const interval = setInterval(() => {
+          setCheersCount(prev => {
+            if (prev > 0) {
+              setIsDecaying(true);
+              setTimeout(() => setIsDecaying(false), 250);
+              return prev - 1;
+            }
+            return 0;
+          });
+        }, decayIntervalMs);
+
+        return () => clearInterval(interval);
+      }, []);
+
+      const showNotification = (msg) => {
+        setToast({ id: Date.now(), message: msg });
+      };
+
+      const handleCloseToast = useCallback(() => {
+        setToast(null);
+        setSessionBoost(0);
+      }, []);
+
+      const triggerCheers = () => {
+        playGlassClinkSound();
+        setCheersCount(prev => prev + 1);
+        setIsClinking(true);
+        setTimeout(() => setIsClinking(false), 400);
+
+        setSessionBoost(prev => {
+          const nextBoost = prev + 1;
+          setToast({
+            id: Date.now(),
+            message: `Morale boosted +${nextBoost}`
+          });
+          return nextBoost;
+        });
+      };
+
+      useEffect(() => {
+        const canvas = document.getElementById('particle-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let animationFrameId;
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        const isMobile = window.innerWidth < 768;
+        const particleCount = isMobile ? 25 : 55;
+        const maxDistance = isMobile ? 110 : 150;
+
+        const particles = Array.from({ length: particleCount }, () => ({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.45,
+          vy: (Math.random() - 0.5) * 0.45,
+          radius: Math.random() * 1.5 + 1
+        }));
+
+        const handleResize = () => {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        const render = () => {
+          ctx.clearRect(0, 0, width, height);
+
+          particles.forEach((p, i) => {
+            p.x += p.vx;
+            p.y += p.vy;
+
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(129, 140, 248, 0.45)';
+            ctx.fill();
+
+            for (let j = i + 1; j < particles.length; j++) {
+              const p2 = particles[j];
+              const dx = p.x - p2.x;
+              const dy = p.y - p2.y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+
+              if (dist < maxDistance) {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = `rgba(99, 102, 241, ${0.16 * (1 - dist / maxDistance)})`;
+                ctx.lineWidth = 0.8;
+                ctx.stroke();
+              }
+            }
+          });
+
+          animationFrameId = requestAnimationFrame(render);
+        };
+
+        render();
+
+        return () => {
+          window.removeEventListener('resize', handleResize);
+          cancelAnimationFrame(animationFrameId);
+        };
+      }, []);
+
+      const handleCloseModal = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+          setSelectedMember(null);
+          setIsClosing(false);
+        }, 180);
+      };
+
+      useEffect(() => {
+        if (selectedMember || expandedPhoto) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = 'unset';
+        }
+      }, [selectedMember, expandedPhoto]);
+
+      const handleCopyToClipboard = (text, label) => {
+        const tempInput = document.createElement('input');
+        tempInput.value = text;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        showNotification(`Copied ${label} to clipboard!`);
+      };
+
+      const handleOpenBigPhoto = (member, e) => {
+        if (e) e.stopPropagation();
+        setExpandedPhoto({
+          src: member.avatar,
+          name: member.name,
+          member: member
+        });
+      };
+
+      const filteredMembers = useMemo(() => {
+        return members.filter((m) => {
+          const matchesSearch = 
+            m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            m.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            m.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (m.skills && m.skills.some(s => s.toLowerCase().includes(searchTerm.toLowerCase())));
+
+          const matchesRole = activeFilter === 'All' || m.role === activeFilter;
+
+          return matchesSearch && matchesRole;
+        });
+      }, [members, searchTerm, activeFilter]);
+
+      const getRoleBadge = (role) => {
+        switch(role) {
+          case 'Pherk Klang':
+            return 'bg-violet-500/15 text-violet-300 border-violet-500/30';
+          case 'Pherk Orn':
+            return 'bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/30';
+          case 'Sdach Cy':
+            return 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30';
+          default:
+            return 'bg-zinc-800/80 text-zinc-300 border-zinc-700/80';
+        }
+      };
+
+      const handleAvatarError = (e, member) => {
+        const target = e.target;
+        const step = parseInt(target.dataset.step || "0", 10);
+        
+        let fallbacks = [];
+        if (member?.id === 1) {
+          fallbacks = [
+            "images/photo1.jpg", "images/photo1.png", "images/photo1.jpeg", "images/photo1",
+            "photo1.jpg", "photo1.png", "photo1",
+            "file:///E:/Code/images/photo1", "file:///E:/Code/images/photo1.jpg", "file:///E:/Code/images/photo1.png"
+          ];
+        } else if (member?.id === 2) {
+          fallbacks = [
+            "images/photo5.jpg", "images/photo5.png", "images/photo5.jpeg", "images/photo5",
+            "photo5.jpg", "photo5.png", "photo5",
+            "file:///E:/Code/images/photo5", "file:///E:/Code/images/photo5.jpg", "file:///E:/Code/images/photo5.png"
+          ];
+        } else if (member?.id === 3) {
+          fallbacks = [
+            "images/photo7.jpg", "images/photo7.png", "images/photo7.jpeg", "images/photo7",
+            "photo7.jpg", "photo7.png", "photo7",
+            "file:///E:/Code/images/photo7", "file:///E:/Code/images/photo7.jpg", "file:///E:/Code/images/photo7.png"
+          ];
+        } else if (member?.id === 4) {
+          fallbacks = [
+            "images/photo10.jpg", "images/photo10.png", "images/photo10.jpeg", "images/photo10",
+            "photo10.jpg", "photo10.png", "photo10",
+            "file:///E:/Code/images/photo10", "file:///E:/Code/images/photo10.jpg", "file:///E:/Code/images/photo10.png"
+          ];
+        } else if (member?.id === 5) {
+          fallbacks = [
+            "images/photo8.jpg", "images/photo8.png", "images/photo8.jpeg", "images/photo8",
+            "photo8.jpg", "photo8.png", "photo8",
+            "file:///E:/Code/images/photo8", "file:///E:/Code/images/photo8.jpg", "file:///E:/Code/images/photo8.png"
+          ];
+        } else if (member?.id === 6) {
+          fallbacks = [
+            "images/photo2.jpg", "images/photo2.png", "images/photo2.jpeg", "images/photo2",
+            "photo2.jpg", "photo2.png", "photo2",
+            "file:///E:/Code/images/photo2", "file:///E:/Code/images/photo2.jpg", "file:///E:/Code/images/photo2.png"
+          ];
+        } else if (member?.id === 7) {
+          fallbacks = [
+            "images/photo11.jpg", "images/photo11.png", "images/photo11.jpeg", "images/photo11",
+            "photo11.jpg", "photo11.png", "photo11",
+            "file:///E:/Code/images/photo11", "file:///E:/Code/images/photo11.jpg", "file:///E:/Code/images/photo11.png"
+          ];
+        } else if (member?.id === 8) {
+          fallbacks = [
+            "images/photo9.jpg", "images/photo9.png", "images/photo9.jpeg", "images/photo9",
+            "photo9.jpg", "photo9.png", "photo9",
+            "file:///E:/Code/images/photo9", "file:///E:/Code/images/photo9.jpg", "file:///E:/Code/images/photo9.png"
+          ];
+        } else if (member?.id === 9) {
+          fallbacks = [
+            "images/photo12.jpg", "images/photo12.png", "images/photo12.jpeg", "images/photo12",
+            "photo12.jpg", "photo12.png", "photo12",
+            "file:///E:/Code/images/photo12", "file:///E:/Code/images/photo12.jpg", "file:///E:/Code/images/photo12.png"
+          ];
+        } else if (member?.id === 10) {
+          fallbacks = [
+            "images/photo3.jpg", "images/photo3.png", "images/photo3.jpeg", "images/photo3",
+            "photo3.jpg", "photo3.png", "photo3",
+            "file:///E:/Code/images/photo3", "file:///E:/Code/images/photo3.jpg", "file:///E:/Code/images/photo3.png"
+          ];
+        } else if (member?.id === 11) {
+          fallbacks = [
+            "images/photo4.jpg", "images/photo4.png", "images/photo4.jpeg", "images/photo4",
+            "photo4.jpg", "photo4.png", "photo4",
+            "file:///E:/Code/images/photo4", "file:///E:/Code/images/photo4.jpg", "file:///E:/Code/images/photo4.png"
+          ];
+        } else if (member?.id === 12) {
+          fallbacks = [
+            "images/photo6.jpg", "images/photo6.png", "images/photo6.jpeg", "images/photo6",
+            "photo6.jpg", "photo6.png", "photo6",
+            "file:///E:/Code/images/photo6", "file:///E:/Code/images/photo6.jpg", "file:///E:/Code/images/photo6.png"
+          ];
+        }
+
+        if (step < fallbacks.length) {
+          target.dataset.step = (step + 1).toString();
+          target.src = fallbacks[step];
+        } else {
+          target.onerror = null;
+          const initials = encodeURIComponent(member?.name || 'Member');
+          target.src = `https://placehold.co/600x600/4f46e5/ffffff?text=${initials}`;
+        }
+      };
+
+      return (
+        <div className="p-4 sm:p-10 max-w-6xl mx-auto space-y-6 pb-20 pt-safe">
+          
+          {/* Header Section */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 pb-1">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                <span className="text-[10px] sm:text-[11px] font-black tracking-widest uppercase text-zinc-400">TEAM PHERK</span>
+              </div>
+              
+              <h1 className="cool-title-font text-5xl sm:text-6xl md:text-7xl font-normal tracking-wide mt-1 text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-100 to-indigo-300 drop-shadow-[0_0_35px_rgba(99,102,241,0.35)]">
+                Pherk v2
+              </h1>
+            </div>
+
+            {/* Stat Widgets */}
+            <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
+              <div className="cool-glass-card px-4 py-2.5 rounded-2xl flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 glow-indigo">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-10 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <div className="text-[9px] text-zinc-400 font-extrabold uppercase tracking-wider">Total Members</div>
+                  <div className="text-sm font-black text-white">{members.length}</div>
+                </div>
+              </div>
+
+              <div
+                onClick={triggerCheers}
+                className="cool-glass-card px-4 py-2.5 rounded-2xl flex items-center gap-3 cursor-pointer hover:border-amber-500/50 transition-all active:scale-95 group relative overflow-hidden select-none"
+                title="Click to Cheer! Adds +1 Cheer per tap."
+              >
+                <div className={`w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/40 flex items-center justify-center text-amber-400 glow-amber relative overflow-hidden ${isClinking ? 'animate-cheers' : ''}`}>
+                  <span className="w-1 h-1 bg-amber-200/80 rounded-full absolute bottom-1 left-2 beer-bubble-1"></span>
+                  <span className="w-1.5 h-1.5 bg-amber-100/90 rounded-full absolute bottom-1 left-3.5 beer-bubble-2"></span>
+                  <span className="w-1 h-1 bg-amber-200/80 rounded-full absolute bottom-1 right-2 beer-bubble-3"></span>
+
+                  <svg className="w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform relative z-10" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 3h10v12a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V3z" opacity="0.3" />
+                    <path fillRule="evenodd" clipRule="evenodd" d="M4 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v2h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2v1a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V3zm12 3V4H6v11a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V6zm2 2h2v4h-2V8z" />
+                    <path className="foam-slosh text-amber-200" fill="currentColor" d="M6 3.5c1 0 1.5-.8 2.5-.8s1.5.8 2.5.8 1.5-.8 2.5-.8 1.5.8 2.5.8V7H6V3.5z" />
+                  </svg>
+                </div>
+
+                <div>
+                  <div className="text-[9px] text-amber-400/90 font-extrabold uppercase tracking-wider flex items-center gap-1">
+                    <span>Beer Cheer</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                    <span className="text-[8px] bg-amber-500/20 text-amber-300 px-1 rounded border border-amber-500/30 font-bold ml-0.5">
+                      2X DECAY
+                    </span>
+                  </div>
+                  <div className="text-sm font-black text-amber-300 flex items-center gap-1">
+                    <span className={isDecaying ? 'text-amber-400 opacity-90 scale-95 transition-all' : 'transition-all'}>
+                      {cheersCount} Cheers
+                    </span>
+                    <span className="text-xs group-hover:rotate-12 transition-transform inline-block">🍻</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {}
+          <div className="cool-glass-card p-2.5 sm:p-3 rounded-2xl sm:rounded-3xl flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+            <div className="relative flex-1">
+              <svg className="w-4 h-4 absolute left-3.5 top-3.5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search by name, role, email or skill..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-zinc-950/80 border border-zinc-800/90 text-zinc-100 text-xs sm:text-sm rounded-xl sm:rounded-2xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-zinc-500"
+              />
+            </div>
+
+            <div className="flex items-center gap-1.5 overflow-x-auto p-1 bg-zinc-950/60 rounded-xl sm:rounded-2xl border border-zinc-800/80">
+              {['All', 'Pherk Klang', 'Pherk Orn', 'Sdach Cy'].map((role) => (
+                <button
+                  key={role}
+                  onClick={() => setActiveFilter(role)}
+                  className={`px-3.5 py-1.5 rounded-lg sm:rounded-xl text-xs font-extrabold transition-all whitespace-nowrap ${
+                    activeFilter === role
+                      ? 'bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-500/25 scale-[1.02]'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                  }`}
+                >
+                  {role}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredMembers.length > 0 ? (
+              filteredMembers.map((member) => (
+                <div
+                  key={member.id}
+                  onClick={() => setSelectedMember(member)}
+                  className="cool-glass-card rounded-2xl p-5 hover:-translate-y-1 transition-all cursor-pointer relative group flex flex-col justify-between space-y-4"
+                >
+                  <div>
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        
+                        {/* Avatar Image container with tap-to-expand */}
+                        <div 
+                          onClick={(e) => handleOpenBigPhoto(member, e)}
+                          className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-zinc-700/80 group-hover:border-indigo-400 transition-all shadow-md relative bg-zinc-900 flex-shrink-0 cursor-zoom-in group/avatar hover:scale-105 active:scale-95"
+                          title="Tap to see big photo 🔍"
+                        >
+                          <img
+                            src={member.avatar}
+                            alt={member.name}
+                            onError={(e) => handleAvatarError(e, member)}
+                            className="w-full h-full object-cover object-center"
+                          />
+                          <div className="absolute inset-0 bg-indigo-600/30 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center">
+                            <span className="text-[10px]">🔍</span>
+                          </div>
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-bold text-white text-base group-hover:text-indigo-300 transition-colors leading-snug truncate">
+                            {member.name}
+                          </h3>
+                          <p className="text-xs text-zinc-400 truncate">{member.email}</p>
+                        </div>
+                      </div>
+
+                      <span className={`px-2.5 py-0.5 rounded-lg font-extrabold text-[10px] border whitespace-nowrap shrink-0 ${getRoleBadge(member.role)}`}>
+                        {member.role}
+                      </span>
+                    </div>
+
+                    <p className={`text-xs text-zinc-400 line-clamp-2 leading-relaxed ${[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(member.id) ? 'khmer-font' : ''}`}>
+                      {member.bio}
+                    </p>
+                  </div>
+
+                  <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between">
+                    <div className="flex flex-wrap gap-1">
+                      {member.skills && member.skills.slice(0, 2).map((skill, i) => (
+                        <span key={i} className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-400 px-2 py-0.5 rounded-md font-bold">
+                          {skill}
+                        </span>
+                      ))}
+                      {member.skills && member.skills.length > 2 && (
+                        <span className="text-[9px] text-zinc-500 font-bold self-center">
+                          +{member.skills.length - 2}
+                        </span>
+                      )}
+                    </div>
+
+                    <span className="text-xs font-bold text-indigo-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                      Inspect &rarr;
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12 text-zinc-500 text-xs cool-glass-card rounded-2xl">
+                No team members matching your search query.
+              </div>
+            )}
+          </div>
+
+          {}
+          {selectedMember && (
+            <div
+              onClick={handleCloseModal}
+              className={`fixed inset-0 z-[100] w-screen h-screen flex items-end sm:items-center justify-center bg-[#08090e]/92 backdrop-blur-2xl p-0 sm:p-4 ${
+                isClosing ? 'animate-backdrop-out' : 'animate-backdrop-in'
+              }`}
+            >
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className={`cool-glass-card rounded-t-3xl sm:rounded-3xl w-full max-w-lg p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] space-y-5 max-h-[90vh] overflow-y-auto pb-safe border border-white/10 ${
+                  isClosing ? 'animate-sheet-out' : 'animate-sheet-in'
+                }`}
+              >
+                <div className="w-12 h-1.5 bg-zinc-700/80 rounded-full mx-auto sm:hidden mb-1" />
+
+                <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
+                  <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                    
+                    {/* Big Photo Tap Target in Modal */}
+                    <div 
+                      onClick={(e) => handleOpenBigPhoto(selectedMember, e)}
+                      className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-indigo-500 shadow-lg glow-indigo relative bg-zinc-900 flex-shrink-0 cursor-zoom-in group/modalAvatar hover:scale-105 active:scale-95 transition-transform"
+                      title="Tap to see big photo 🔍"
+                    >
+                      <img
+                        src={selectedMember.avatar}
+                        alt={selectedMember.name}
+                        onError={(e) => handleAvatarError(e, selectedMember)}
+                        className="w-full h-full object-cover object-center"
+                      />
+                      <div className="absolute inset-0 bg-indigo-600/35 opacity-0 group-hover/modalAvatar:opacity-100 transition-opacity flex flex-col items-center justify-center">
+                        <span className="text-sm">🔍</span>
+                        <span className="text-[8px] text-white font-bold uppercase tracking-wider">Expand</span>
+                      </div>
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-lg font-black text-white truncate">{selectedMember.name}</h2>
+                      </div>
+
+                      <p 
+                        onClick={() => handleCopyToClipboard(selectedMember.email, "email")}
+                        className="text-xs text-zinc-400 hover:text-indigo-300 cursor-pointer flex items-center gap-1 truncate"
+                        title="Click to copy email"
+                      >
+                        <span className="truncate">{selectedMember.email}</span>
+                        <span className="text-[10px] opacity-60 shrink-0">📋</span>
+                      </p>
+                      
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <span className={`px-2.5 py-0.5 rounded-lg text-[10px] font-extrabold border whitespace-nowrap shrink-0 ${getRoleBadge(selectedMember.role)}`}>
+                          {selectedMember.role}
+                        </span>
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                          {selectedMember.status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleCloseModal}
+                    className="text-zinc-400 hover:text-white bg-zinc-800/80 p-2 rounded-full transition-all border border-zinc-700/60 self-start hover:scale-105 active:scale-95 shrink-0 ml-2"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {/* Connected Socials */}
+                <div>
+                  <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2.5">Connected Socials</h4>
+                  <div className="flex flex-wrap gap-2.5 text-xs">
+                    
+                    {selectedMember.socials?.instagram && (
+                      <a
+                        href={selectedMember.socials?.instagramUrl || `https://instagram.com/${selectedMember.socials?.instagram}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 min-w-[110px] flex flex-col items-center justify-center p-3 rounded-2xl bg-gradient-to-b from-pink-500/10 to-rose-500/5 border border-pink-500/30 hover:border-pink-500/70 hover:bg-pink-500/15 transition-all text-center group active:scale-95"
+                      >
+                        <svg className="w-5 h-5 text-pink-400 mb-1 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.067 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        <span className="font-extrabold text-white block truncate w-full">Instagram</span>
+                        <span className="text-[10px] text-pink-300/80 truncate w-full">@{selectedMember.socials?.instagram}</span>
+                      </a>
+                    )}
+
+                    {selectedMember.socials?.facebook && (
+                      <a
+                        href={selectedMember.socials?.facebookUrl || `https://facebook.com/${selectedMember.socials?.facebook}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 min-w-[110px] flex flex-col items-center justify-center p-3 rounded-2xl bg-gradient-to-b from-blue-500/10 to-indigo-500/5 border border-blue-500/30 hover:border-blue-500/70 hover:bg-blue-500/15 transition-all text-center group active:scale-95"
+                      >
+                        <svg className="w-5 h-5 text-blue-400 mb-1 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        <span className="font-extrabold text-white block truncate w-full">Facebook</span>
+                        <span className="text-[10px] text-blue-300/80 truncate w-full">Profile</span>
+                      </a>
+                    )}
+
+                    {selectedMember.socials?.tiktok && (
+                      <a
+                        href={selectedMember.socials?.tiktokUrl || `https://tiktok.com/${selectedMember.socials?.tiktok}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 min-w-[110px] flex flex-col items-center justify-center p-3 rounded-2xl bg-gradient-to-b from-cyan-500/10 to-teal-500/5 border border-cyan-500/30 hover:border-cyan-500/70 hover:bg-cyan-500/15 transition-all text-center group active:scale-95"
+                      >
+                        <svg className="w-5 h-5 text-cyan-400 mb-1 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12.525.001c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.98-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.82.57-1.31 1.56-1.3 2.56.01.76.32 1.5.87 2.03.62.61 1.52.93 2.38.83 1.05-.08 2.03-.74 2.47-1.7.27-.58.37-1.24.36-1.88.02-4.81.01-9.62.01-14.43z"/>
+                        </svg>
+                        <span className="font-extrabold text-white block truncate w-full">TikTok</span>
+                        <span className="text-[10px] text-cyan-300/80 truncate w-full">{selectedMember.socials?.tiktok}</span>
+                      </a>
+                    )}
+
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1.5">About</h4>
+                  <p className={`text-xs text-zinc-300 leading-relaxed bg-zinc-950/80 p-3.5 rounded-2xl border border-zinc-800/80 ${[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(selectedMember.id) ? 'khmer-font text-sm' : ''}`}>
+                    {selectedMember.bio}
+                  </p>
+                </div>
+
+                {selectedMember.skills && (
+                  <div>
+                    <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2">Skills & Expertise</h4>
+                    <div className="flex flex-wrap gap-1.5">
+                      {selectedMember.skills.map((skill, index) => (
+                        <span
+                          key={index}
+                          className="bg-indigo-500/10 text-indigo-300 text-xs px-3 py-1 rounded-xl border border-indigo-500/30 font-bold"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="pt-2">
+                  <button
+                    onClick={handleCloseModal}
+                    className="w-full py-3 bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 active:from-indigo-600 active:to-violet-700 text-white text-xs font-black rounded-2xl transition-all shadow-lg shadow-indigo-500/25"
+                  >
+                    Close Profile
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          )}
+
+          {}
+          <BigPhotoViewerModal
+            photoData={expandedPhoto}
+            onClose={() => setExpandedPhoto(null)}
+            onError={handleAvatarError}
+          />
+
+          <Toast
+            toast={toast}
+            onClose={handleCloseToast}
+          />
+
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<MemberDashboard />);
+  </script>
+
+</body>
+</html>
