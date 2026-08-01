@@ -12,7 +12,7 @@
   <!-- SVG Emoji Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍻</text></svg>">
 
-  <!-- Immediate Dark Background Guard (Prevents iOS Safari White Flash) -->
+  <!-- Instant Dark Background Guard (Prevents White Screen on Frame 1) -->
   <style>
     html, body {
       background-color: #08090e !important;
@@ -29,10 +29,9 @@
     }
   </style>
 
-  <!-- Production Minified CDNs -->
+  <!-- Fast Minified Production React 18 CDNs (No Babel Required) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js" crossorigin></script>
   <script src="https://cdn.tailwindcss.com"></script>
   
   <link href="https://fonts.googleapis.com/css2?family=Germania+One&family=Koulen&family=Siemreap&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -166,20 +165,13 @@
   <!-- Background Particle Canvas -->
   <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
-  <!-- Root Container with Instant Dark Preloader -->
-  <div id="root" class="relative z-10 bg-[#08090e] min-h-screen">
-    <div class="min-h-screen flex flex-col items-center justify-center space-y-4 p-4 text-center">
-      <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center animate-pulse glow-indigo">
-        <span class="text-xl">🍻</span>
-      </div>
-      <div class="space-y-1">
-        <h2 class="text-lg font-bold text-white tracking-wide">Pherk Hub v2</h2>
-        <p class="text-xs text-indigo-400/80 font-medium">Loading directory...</p>
-      </div>
-    </div>
-  </div>
+  <div id="root" class="relative z-10 bg-[#08090e] min-h-screen"></div>
 
-  <script type="text/babel">
+  <!-- Native Standard JavaScript (0ms Parsing Delay on Mobile) -->
+  <script>
+    const e = React.createElement;
+    const { useState, useEffect, useMemo, useCallback, useRef } = React;
+
     let sharedAudioCtx = null;
 
     const getAudioContext = () => {
@@ -245,8 +237,6 @@
         // Fallback gracefully
       }
     };
-
-    const { useState, useEffect, useMemo, useCallback, useRef } = React;
 
     const INITIAL_MEMBERS = [
       {
@@ -451,17 +441,13 @@
       }
     ];
 
-    const Toast = ({ toast, onClose }) => {
+    function Toast({ toast, onClose }) {
       const [isExiting, setIsExiting] = useState(false);
 
       useEffect(() => {
         if (!toast) return;
         setIsExiting(false);
-
-        const timer = setTimeout(() => {
-          setIsExiting(true);
-        }, 3000);
-
+        const timer = setTimeout(() => setIsExiting(true), 3000);
         return () => clearTimeout(timer);
       }, [toast?.id]);
 
@@ -477,24 +463,20 @@
 
       if (!toast) return null;
 
-      return (
-        <div 
-          className={`fixed bottom-6 right-6 z-[250] px-4 py-3 rounded-2xl bg-zinc-900/95 border border-amber-500/40 text-amber-300 backdrop-blur-2xl shadow-[0_12px_40px_-8px_rgba(245,158,11,0.35)] flex items-center gap-3.5 pointer-events-none transition-all ${
-            isExiting ? 'animate-toast-out' : 'animate-sheet-in'
-          }`}
-        >
-          <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm shadow-[0_0_14px_rgba(245,158,11,0.45)]">
-            🍻
-          </div>
-          <div className="flex flex-col">
-            <span className="text-[9px] uppercase font-black tracking-wider text-amber-400">CHEER BOOST</span>
-            <span className="text-xs font-extrabold text-white tracking-wide">{toast.message}</span>
-          </div>
-        </div>
-      );
-    };
+      return e('div', {
+        className: `fixed bottom-6 right-6 z-[250] px-4 py-3 rounded-2xl bg-zinc-900/95 border border-amber-500/40 text-amber-300 backdrop-blur-2xl shadow-[0_12px_40px_-8px_rgba(245,158,11,0.35)] flex items-center gap-3.5 pointer-events-none transition-all ${
+          isExiting ? 'animate-toast-out' : 'animate-sheet-in'
+        }`
+      }, [
+        e('div', { key: 'icon', className: 'w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm shadow-[0_0_14px_rgba(245,158,11,0.45)]' }, '🍻'),
+        e('div', { key: 'text', className: 'flex flex-col' }, [
+          e('span', { key: 'lbl', className: 'text-[9px] uppercase font-black tracking-wider text-amber-400' }, 'CHEER BOOST'),
+          e('span', { key: 'msg', className: 'text-xs font-extrabold text-white tracking-wide' }, toast.message)
+        ])
+      ]);
+    }
 
-    const BigPhotoViewerModal = ({ photoData, onClose, onError }) => {
+    function BigPhotoViewerModal({ photoData, onClose, onError }) {
       const [isClosing, setIsClosing] = useState(false);
 
       const handleClose = () => {
@@ -506,8 +488,8 @@
       };
 
       useEffect(() => {
-        const handleKeyDown = (e) => {
-          if (e.key === 'Escape') handleClose();
+        const handleKeyDown = (evt) => {
+          if (evt.key === 'Escape') handleClose();
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
@@ -515,70 +497,59 @@
 
       if (!photoData) return null;
 
-      return (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-8 select-none">
-          {/* Backdrop Layer */}
-          <div
-            onClick={handleClose}
-            className={`fixed inset-0 bg-[#08090e]/75 backdrop-blur-2xl ${
-              isClosing ? 'animate-backdrop-out' : 'animate-backdrop-in'
-            }`}
-            style={{ WebkitBackdropFilter: 'blur(24px)' }}
-          />
-
-          {/* Modal Container */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className={`relative z-10 max-w-2xl w-full cool-glass-card rounded-3xl p-4 sm:p-6 border border-white/15 shadow-[0_30px_90px_rgba(0,0,0,0.95)] flex flex-col items-center space-y-4 ${
-              isClosing ? 'animate-zoom-out' : 'animate-zoom-in'
-            }`}
-          >
-            {/* Modal Header Bar */}
-            <div className="w-full flex items-center justify-between border-b border-zinc-800/80 pb-3">
-              <div className="flex items-center gap-2.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></div>
-                <div>
-                  <h3 className="text-sm sm:text-base font-black text-white">{photoData.name}</h3>
-                  <span className="text-[10px] uppercase font-bold text-indigo-400 tracking-wider">High Resolution View</span>
-                </div>
-              </div>
-
-              <button
-                onClick={handleClose}
-                className="text-zinc-400 hover:text-white bg-zinc-800/80 hover:bg-zinc-700/80 p-2.5 rounded-full transition-all border border-zinc-700/60 active:scale-95"
-                title="Close Photo (Esc)"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Big Photo Container */}
-            <div className="w-full max-h-[70vh] flex items-center justify-center rounded-2xl bg-zinc-950/80 border border-zinc-800/90 p-2 overflow-hidden shadow-2xl relative group">
-              <img
-                src={photoData.src}
-                alt={photoData.name}
-                onError={(e) => onError(e, photoData.member)}
-                className="max-w-full max-h-[65vh] object-contain rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-[1.02]"
-              />
-            </div>
-
-            {/* Modal Bottom Action Bar */}
-            <div className="w-full flex items-center justify-between pt-1">
-              <span className="text-[11px] text-zinc-400 font-medium">
-                Tap outside or press <kbd className="px-1.5 py-0.5 bg-zinc-800 border border-zinc-700 rounded text-[9px] font-mono text-zinc-300">Esc</kbd> to exit
-              </span>
-
-              <button
-                onClick={handleClose}
-                className="px-5 py-2 bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 hover:from-indigo-600 hover:to-violet-700 active:scale-95 text-white text-xs font-black rounded-xl transition-all shadow-md shadow-indigo-500/20"
-              >
-                Close Viewer
-              </button>
-            </div>
-          </div>
-        </div>
-      );
-    };
+      return e('div', { className: 'fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-8 select-none' }, [
+        e('div', {
+          key: 'bg',
+          onClick: handleClose,
+          className: `fixed inset-0 bg-[#08090e]/75 backdrop-blur-2xl ${isClosing ? 'animate-backdrop-out' : 'animate-backdrop-in'}`,
+          style: { WebkitBackdropFilter: 'blur(24px)' }
+        }),
+        e('div', {
+          key: 'modal',
+          onClick: (evt) => evt.stopPropagation(),
+          className: `relative z-10 max-w-2xl w-full cool-glass-card rounded-3xl p-4 sm:p-6 border border-white/15 shadow-[0_30px_90px_rgba(0,0,0,0.95)] flex flex-col items-center space-y-4 ${
+            isClosing ? 'animate-zoom-out' : 'animate-zoom-in'
+          }`
+        }, [
+          e('div', { key: 'header', className: 'w-full flex items-center justify-between border-b border-zinc-800/80 pb-3' }, [
+            e('div', { key: 'title-group', className: 'flex items-center gap-2.5' }, [
+              e('div', { key: 'dot', className: 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping' }),
+              e('div', { key: 'titles' }, [
+                e('h3', { key: 'h3', className: 'text-sm sm:text-base font-black text-white' }, photoData.name),
+                e('span', { key: 'sub', className: 'text-[10px] uppercase font-bold text-indigo-400 tracking-wider' }, 'High Resolution View')
+              ])
+            ]),
+            e('button', {
+              key: 'btn-close',
+              onClick: handleClose,
+              className: 'text-zinc-400 hover:text-white bg-zinc-800/80 hover:bg-zinc-700/80 p-2.5 rounded-full transition-all border border-zinc-700/60 active:scale-95',
+              title: 'Close Photo (Esc)'
+            }, '✕')
+          ]),
+          e('div', { key: 'img-box', className: 'w-full max-h-[70vh] flex items-center justify-center rounded-2xl bg-zinc-950/80 border border-zinc-800/90 p-2 overflow-hidden shadow-2xl relative group' }, [
+            e('img', {
+              key: 'img',
+              src: photoData.src,
+              alt: photoData.name,
+              onError: (evt) => onError(evt, photoData.member),
+              className: 'max-w-full max-h-[65vh] object-contain rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-[1.02]'
+            })
+          ]),
+          e('div', { key: 'footer', className: 'w-full flex items-center justify-between pt-1' }, [
+            e('span', { key: 'hint', className: 'text-[11px] text-zinc-400 font-medium' }, [
+              'Tap outside or press ',
+              e('kbd', { key: 'kbd', className: 'px-1.5 py-0.5 bg-zinc-800 border border-zinc-700 rounded text-[9px] font-mono text-zinc-300' }, 'Esc'),
+              ' to exit'
+            ]),
+            e('button', {
+              key: 'close-view-btn',
+              onClick: handleClose,
+              className: 'px-5 py-2 bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 hover:from-indigo-600 hover:to-violet-700 active:scale-95 text-white text-xs font-black rounded-xl transition-all shadow-md shadow-indigo-500/20'
+            }, 'Close Viewer')
+          ])
+        ])
+      ]);
+    }
 
     function MemberDashboard() {
       const [members, setMembers] = useState(INITIAL_MEMBERS);
@@ -642,7 +613,6 @@
         });
       };
 
-      // Deferred particle canvas for mobile CPU optimization
       useEffect(() => {
         const timer = setTimeout(() => {
           const canvas = document.getElementById('particle-canvas');
@@ -739,8 +709,8 @@
         showNotification(`Copied ${label} to clipboard!`);
       };
 
-      const handleOpenBigPhoto = (member, e) => {
-        if (e) e.stopPropagation();
+      const handleOpenBigPhoto = (member, evt) => {
+        if (evt) evt.stopPropagation();
         setExpandedPhoto({
           src: member.avatar,
           name: member.name,
@@ -775,36 +745,23 @@
         }
       };
 
-      const handleAvatarError = (e, member) => {
-        const target = e.target;
+      const handleAvatarError = (evt, member) => {
+        const target = evt.target;
         const step = parseInt(target.dataset.step || "0", 10);
         
         let fallbacks = [];
-        if (member?.id === 1) {
-          fallbacks = ["images/photo1.jpg", "images/photo1.png", "images/photo1.jpeg", "images/photo1"];
-        } else if (member?.id === 2) {
-          fallbacks = ["images/photo5.jpg", "images/photo5.png", "images/photo5.jpeg", "images/photo5"];
-        } else if (member?.id === 3) {
-          fallbacks = ["images/photo7.jpg", "images/photo7.png", "images/photo7.jpeg", "images/photo7"];
-        } else if (member?.id === 4) {
-          fallbacks = ["images/photo10.jpg", "images/photo10.png", "images/photo10.jpeg", "images/photo10"];
-        } else if (member?.id === 5) {
-          fallbacks = ["images/photo8.jpg", "images/photo8.png", "images/photo8.jpeg", "images/photo8"];
-        } else if (member?.id === 6) {
-          fallbacks = ["images/photo2.jpg", "images/photo2.png", "images/photo2.jpeg", "images/photo2"];
-        } else if (member?.id === 7) {
-          fallbacks = ["images/photo11.jpg", "images/photo11.png", "images/photo11.jpeg", "images/photo11"];
-        } else if (member?.id === 8) {
-          fallbacks = ["images/photo9.jpg", "images/photo9.png", "images/photo9.jpeg", "images/photo9"];
-        } else if (member?.id === 9) {
-          fallbacks = ["images/photo12.jpg", "images/photo12.png", "images/photo12.jpeg", "images/photo12"];
-        } else if (member?.id === 10) {
-          fallbacks = ["images/photo3.jpg", "images/photo3.png", "images/photo3.jpeg", "images/photo3"];
-        } else if (member?.id === 11) {
-          fallbacks = ["images/photo4.jpg", "images/photo4.png", "images/photo4.jpeg", "images/photo4"];
-        } else if (member?.id === 12) {
-          fallbacks = ["images/photo6.jpg", "images/photo6.png", "images/photo6.jpeg", "images/photo6"];
-        }
+        if (member?.id === 1) fallbacks = ["images/photo1.jpg", "images/photo1.png", "images/photo1.jpeg", "images/photo1"];
+        else if (member?.id === 2) fallbacks = ["images/photo5.jpg", "images/photo5.png", "images/photo5.jpeg", "images/photo5"];
+        else if (member?.id === 3) fallbacks = ["images/photo7.jpg", "images/photo7.png", "images/photo7.jpeg", "images/photo7"];
+        else if (member?.id === 4) fallbacks = ["images/photo10.jpg", "images/photo10.png", "images/photo10.jpeg", "images/photo10"];
+        else if (member?.id === 5) fallbacks = ["images/photo8.jpg", "images/photo8.png", "images/photo8.jpeg", "images/photo8"];
+        else if (member?.id === 6) fallbacks = ["images/photo2.jpg", "images/photo2.png", "images/photo2.jpeg", "images/photo2"];
+        else if (member?.id === 7) fallbacks = ["images/photo11.jpg", "images/photo11.png", "images/photo11.jpeg", "images/photo11"];
+        else if (member?.id === 8) fallbacks = ["images/photo9.jpg", "images/photo9.png", "images/photo9.jpeg", "images/photo9"];
+        else if (member?.id === 9) fallbacks = ["images/photo12.jpg", "images/photo12.png", "images/photo12.jpeg", "images/photo12"];
+        else if (member?.id === 10) fallbacks = ["images/photo3.jpg", "images/photo3.png", "images/photo3.jpeg", "images/photo3"];
+        else if (member?.id === 11) fallbacks = ["images/photo4.jpg", "images/photo4.png", "images/photo4.jpeg", "images/photo4"];
+        else if (member?.id === 12) fallbacks = ["images/photo6.jpg", "images/photo6.png", "images/photo6.jpeg", "images/photo6"];
 
         if (step < fallbacks.length) {
           target.dataset.step = (step + 1).toString();
@@ -816,358 +773,304 @@
         }
       };
 
-      return (
-        <div className="p-4 sm:p-10 max-w-6xl mx-auto space-y-6 pb-20 pt-safe">
-          
-          {/* Header Section */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 pb-1">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
-                <span className="text-[10px] sm:text-[11px] font-black tracking-widest uppercase text-zinc-400">TEAM PHERK</span>
-              </div>
-              
-              <h1 className="cool-title-font text-5xl sm:text-6xl md:text-7xl font-normal tracking-wide mt-1 text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-100 to-indigo-300 drop-shadow-[0_0_35px_rgba(99,102,241,0.35)]">
-                Pherk v2
-              </h1>
-            </div>
+      return e('div', { className: 'p-4 sm:p-10 max-w-6xl mx-auto space-y-6 pb-20 pt-safe' }, [
+        
+        /* Header Section */
+        e('div', { key: 'header', className: 'flex flex-col md:flex-row md:items-center justify-between gap-5 pb-1' }, [
+          e('div', { key: 'title-block' }, [
+            e('div', { key: 'tag', className: 'flex items-center gap-2' }, [
+              e('span', { key: 'dot', className: 'w-2 h-2 rounded-full bg-indigo-400 animate-pulse' }),
+              e('span', { key: 'txt', className: 'text-[10px] sm:text-[11px] font-black tracking-widest uppercase text-zinc-400' }, 'TEAM PHERK')
+            ]),
+            e('h1', { key: 'h1', className: 'cool-title-font text-5xl sm:text-6xl md:text-7xl font-normal tracking-wide mt-1 text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-100 to-indigo-300 drop-shadow-[0_0_35px_rgba(99,102,241,0.35)]' }, 'Pherk v2')
+          ]),
 
-            {/* Stat Widgets */}
-            <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
-              <div className="cool-glass-card px-4 py-2.5 rounded-2xl flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 glow-indigo">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-10 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="text-[9px] text-zinc-400 font-extrabold uppercase tracking-wider">Total Members</div>
-                  <div className="text-sm font-black text-white">{members.length}</div>
-                </div>
-              </div>
+          /* Stat Widgets */
+          e('div', { key: 'stats', className: 'flex items-center gap-2.5 flex-wrap sm:flex-nowrap' }, [
+            e('div', { key: 'stat1', className: 'cool-glass-card px-4 py-2.5 rounded-2xl flex items-center gap-3' }, [
+              e('div', { key: 'ico', className: 'w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 glow-indigo' },
+                e('svg', { className: 'w-5 h-5', fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor' },
+                  e('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-10 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z' })
+                )
+              ),
+              e('div', { key: 'txts' }, [
+                e('div', { key: 'l', className: 'text-[9px] text-zinc-400 font-extrabold uppercase tracking-wider' }, 'Total Members'),
+                e('div', { key: 'v', className: 'text-sm font-black text-white' }, members.length)
+              ])
+            ]),
 
-              <div
-                onClick={triggerCheers}
-                className="cool-glass-card px-4 py-2.5 rounded-2xl flex items-center gap-3 cursor-pointer hover:border-amber-500/50 transition-all active:scale-95 group relative overflow-hidden select-none"
-                title="Click to Cheer! Adds +1 Cheer per tap."
-              >
-                <div className={`w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/40 flex items-center justify-center text-amber-400 glow-amber relative overflow-hidden ${isClinking ? 'animate-cheers' : ''}`}>
-                  <span className="w-1 h-1 bg-amber-200/80 rounded-full absolute bottom-1 left-2 beer-bubble-1"></span>
-                  <span className="w-1.5 h-1.5 bg-amber-100/90 rounded-full absolute bottom-1 left-3.5 beer-bubble-2"></span>
-                  <span className="w-1 h-1 bg-amber-200/80 rounded-full absolute bottom-1 right-2 beer-bubble-3"></span>
+            e('div', {
+              key: 'cheer-btn',
+              onClick: triggerCheers,
+              className: 'cool-glass-card px-4 py-2.5 rounded-2xl flex items-center gap-3 cursor-pointer hover:border-amber-500/50 transition-all active:scale-95 group relative overflow-hidden select-none',
+              title: 'Click to Cheer! Adds +1 Cheer per tap.'
+            }, [
+              e('div', { key: 'icon-box', className: `w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/40 flex items-center justify-center text-amber-400 glow-amber relative overflow-hidden ${isClinking ? 'animate-cheers' : ''}` }, [
+                e('span', { key: 'b1', className: 'w-1 h-1 bg-amber-200/80 rounded-full absolute bottom-1 left-2 beer-bubble-1' }),
+                e('span', { key: 'b2', className: 'w-1.5 h-1.5 bg-amber-100/90 rounded-full absolute bottom-1 left-3.5 beer-bubble-2' }),
+                e('span', { key: 'b3', className: 'w-1 h-1 bg-amber-200/80 rounded-full absolute bottom-1 right-2 beer-bubble-3' }),
+                e('svg', { key: 'svg', className: 'w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform relative z-10', viewBox: '0 0 24 24', fill: 'currentColor' }, [
+                  e('path', { key: 'p1', d: 'M6 3h10v12a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V3z', opacity: '0.3' }),
+                  e('path', { key: 'p2', fillRule: 'evenodd', clipRule: 'evenodd', d: 'M4 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v2h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2v1a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V3zm12 3V4H6v11a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V6zm2 2h2v4h-2V8z' }),
+                  e('path', { key: 'p3', className: 'foam-slosh text-amber-200', fill: 'currentColor', d: 'M6 3.5c1 0 1.5-.8 2.5-.8s1.5.8 2.5.8 1.5-.8 2.5-.8 1.5.8 2.5.8V7H6V3.5z' })
+                ])
+              ]),
+              e('div', { key: 'txt-box' }, [
+                e('div', { key: 'header-lbl', className: 'text-[9px] text-amber-400/90 font-extrabold uppercase tracking-wider flex items-center gap-1' }, [
+                  e('span', { key: 'sp1' }, 'Beer Cheer'),
+                  e('span', { key: 'sp2', className: 'w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping' }),
+                  e('span', { key: 'sp3', className: 'text-[8px] bg-amber-500/20 text-amber-300 px-1 rounded border border-amber-500/30 font-bold ml-0.5' }, '2X DECAY')
+                ]),
+                e('div', { key: 'count-val', className: 'text-sm font-black text-amber-300 flex items-center gap-1' }, [
+                  e('span', { key: 'val', className: isDecaying ? 'text-amber-400 opacity-90 scale-95 transition-all' : 'transition-all' }, `${cheersCount} Cheers`),
+                  e('span', { key: 'emoji', className: 'text-xs group-hover:rotate-12 transition-transform inline-block' }, '🍻')
+                ])
+              ])
+            ])
+          ])
+        ]),
 
-                  <svg className="w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform relative z-10" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M6 3h10v12a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V3z" opacity="0.3" />
-                    <path fillRule="evenodd" clipRule="evenodd" d="M4 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v2h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2v1a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V3zm12 3V4H6v11a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V6zm2 2h2v4h-2V8z" />
-                    <path className="foam-slosh text-amber-200" fill="currentColor" d="M6 3.5c1 0 1.5-.8 2.5-.8s1.5.8 2.5.8 1.5-.8 2.5-.8 1.5.8 2.5.8V7H6V3.5z" />
-                  </svg>
-                </div>
+        /* Search & Filter Bar */
+        e('div', { key: 'search-bar', className: 'cool-glass-card p-2.5 sm:p-3 rounded-2xl sm:rounded-3xl flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between' }, [
+          e('div', { key: 'inp-group', className: 'relative flex-1' }, [
+            e('svg', { key: 'ico', className: 'w-4 h-4 absolute left-3.5 top-3.5 text-zinc-400', fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor' },
+              e('path', { strokeLinecap: 'round', strokeLinejoin: 'round', strokeWidth: 2, d: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' })
+            ),
+            e('input', {
+              key: 'inp',
+              type: 'text',
+              placeholder: 'Search by name, role, email or skill...',
+              value: searchTerm,
+              onChange: (evt) => setSearchTerm(evt.target.value),
+              className: 'w-full bg-zinc-950/80 border border-zinc-800/90 text-zinc-100 text-xs sm:text-sm rounded-xl sm:rounded-2xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-zinc-500'
+            })
+          ]),
 
-                <div>
-                  <div className="text-[9px] text-amber-400/90 font-extrabold uppercase tracking-wider flex items-center gap-1">
-                    <span>Beer Cheer</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
-                    <span className="text-[8px] bg-amber-500/20 text-amber-300 px-1 rounded border border-amber-500/30 font-bold ml-0.5">
-                      2X DECAY
-                    </span>
-                  </div>
-                  <div className="text-sm font-black text-amber-300 flex items-center gap-1">
-                    <span className={isDecaying ? 'text-amber-400 opacity-90 scale-95 transition-all' : 'transition-all'}>
-                      {cheersCount} Cheers
-                    </span>
-                    <span className="text-xs group-hover:rotate-12 transition-transform inline-block">🍻</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          e('div', { key: 'filters', className: 'flex items-center gap-1.5 overflow-x-auto p-1 bg-zinc-950/60 rounded-xl sm:rounded-2xl border border-zinc-800/80' },
+            ['All', 'Pherk Klang', 'Pherk Orn', 'Sdach Cy'].map((role) =>
+              e('button', {
+                key: role,
+                onClick: () => setActiveFilter(role),
+                className: `px-3.5 py-1.5 rounded-lg sm:rounded-xl text-xs font-extrabold transition-all whitespace-nowrap ${
+                  activeFilter === role
+                    ? 'bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-500/25 scale-[1.02]'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                }`
+              }, role)
+            )
+          )
+        ]),
 
-          <div className="cool-glass-card p-2.5 sm:p-3 rounded-2xl sm:rounded-3xl flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
-            <div className="relative flex-1">
-              <svg className="w-4 h-4 absolute left-3.5 top-3.5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search by name, role, email or skill..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-zinc-950/80 border border-zinc-800/90 text-zinc-100 text-xs sm:text-sm rounded-xl sm:rounded-2xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-indigo-500/80 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder:text-zinc-500"
-              />
-            </div>
+        /* Members Grid */
+        e('div', { key: 'grid', className: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4' },
+          filteredMembers.length > 0 ? (
+            filteredMembers.map((member) =>
+              e('div', {
+                key: member.id,
+                onClick: () => setSelectedMember(member),
+                className: 'cool-glass-card rounded-2xl p-5 hover:-translate-y-1 transition-all cursor-pointer relative group flex flex-col justify-between space-y-4'
+              }, [
+                e('div', { key: 'top' }, [
+                  e('div', { key: 'row1', className: 'flex items-start justify-between gap-3 mb-3' }, [
+                    e('div', { key: 'user', className: 'flex items-center gap-3 min-w-0 flex-1' }, [
+                      e('div', {
+                        key: 'avatar',
+                        onClick: (evt) => handleOpenBigPhoto(member, evt),
+                        className: 'w-12 h-12 rounded-2xl overflow-hidden border-2 border-zinc-700/80 group-hover:border-indigo-400 transition-all shadow-md relative bg-zinc-900 flex-shrink-0 cursor-zoom-in group/avatar hover:scale-105 active:scale-95',
+                        title: 'Tap to see big photo 🔍'
+                      }, [
+                        e('img', {
+                          key: 'img',
+                          src: member.avatar,
+                          alt: member.name,
+                          onError: (evt) => handleAvatarError(evt, member),
+                          className: 'w-full h-full object-cover object-center'
+                        }),
+                        e('div', { key: 'ov', className: 'absolute inset-0 bg-indigo-600/30 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center' },
+                          e('span', { className: 'text-[10px]' }, '🔍')
+                        )
+                      ]),
+                      e('div', { key: 'meta', className: 'min-w-0 flex-1' }, [
+                        e('h3', { key: 'n', className: 'font-bold text-white text-base group-hover:text-indigo-300 transition-colors leading-snug truncate' }, member.name),
+                        e('p', { key: 'e', className: 'text-xs text-zinc-400 truncate' }, member.email)
+                      ])
+                    ]),
+                    e('span', { key: 'badge', className: `px-2.5 py-0.5 rounded-lg font-extrabold text-[10px] border whitespace-nowrap shrink-0 ${getRoleBadge(member.role)}` }, member.role)
+                  ]),
+                  e('p', { key: 'bio', className: `text-xs text-zinc-400 line-clamp-2 leading-relaxed ${[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(member.id) ? 'khmer-font' : ''}` }, member.bio)
+                ]),
 
-            <div className="flex items-center gap-1.5 overflow-x-auto p-1 bg-zinc-950/60 rounded-xl sm:rounded-2xl border border-zinc-800/80">
-              {['All', 'Pherk Klang', 'Pherk Orn', 'Sdach Cy'].map((role) => (
-                <button
-                  key={role}
-                  onClick={() => setActiveFilter(role)}
-                  className={`px-3.5 py-1.5 rounded-lg sm:rounded-xl text-xs font-extrabold transition-all whitespace-nowrap ${
-                    activeFilter === role
-                      ? 'bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-500/25 scale-[1.02]'
-                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
-                  }`}
-                >
-                  {role}
-                </button>
-              ))}
-            </div>
-          </div>
+                e('div', { key: 'bottom', className: 'pt-3 border-t border-zinc-800/80 flex items-center justify-between' }, [
+                  e('div', { key: 'skills', className: 'flex flex-wrap gap-1' }, [
+                    member.skills && member.skills.slice(0, 2).map((skill, i) =>
+                      e('span', { key: i, className: 'text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-400 px-2 py-0.5 rounded-md font-bold' }, skill)
+                    ),
+                    member.skills && member.skills.length > 2 && e('span', { key: 'more', className: 'text-[9px] text-zinc-500 font-bold self-center' }, `+${member.skills.length - 2}`)
+                  ]),
+                  e('span', { key: 'inspect', className: 'text-xs font-bold text-indigo-400 group-hover:translate-x-1 transition-transform flex items-center gap-1' }, 'Inspect →')
+                ])
+              ])
+            )
+          ) : (
+            e('div', { key: 'empty', className: 'col-span-full text-center py-12 text-zinc-500 text-xs cool-glass-card rounded-2xl' }, 'No team members matching your search query.')
+          )
+        ),
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredMembers.length > 0 ? (
-              filteredMembers.map((member) => (
-                <div
-                  key={member.id}
-                  onClick={() => setSelectedMember(member)}
-                  className="cool-glass-card rounded-2xl p-5 hover:-translate-y-1 transition-all cursor-pointer relative group flex flex-col justify-between space-y-4"
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div className="flex items-center gap-3 min-w-0 flex-1">
-                        
-                        {/* Avatar Image container with tap-to-expand */}
-                        <div 
-                          onClick={(e) => handleOpenBigPhoto(member, e)}
-                          className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-zinc-700/80 group-hover:border-indigo-400 transition-all shadow-md relative bg-zinc-900 flex-shrink-0 cursor-zoom-in group/avatar hover:scale-105 active:scale-95"
-                          title="Tap to see big photo 🔍"
-                        >
-                          <img
-                            src={member.avatar}
-                            alt={member.name}
-                            onError={(e) => handleAvatarError(e, member)}
-                            className="w-full h-full object-cover object-center"
-                          />
-                          <div className="absolute inset-0 bg-indigo-600/30 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center">
-                            <span className="text-[10px]">🔍</span>
-                          </div>
-                        </div>
+        /* Selected Member Modal Sheet */
+        selectedMember && e('div', { key: 'modal-wrapper', className: 'fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4' }, [
+          e('div', {
+            key: 'backdrop',
+            onClick: handleCloseModal,
+            className: `fixed inset-0 bg-[#08090e]/65 backdrop-blur-2xl ${isClosing ? 'animate-backdrop-out' : 'animate-backdrop-in'}`,
+            style: { WebkitBackdropFilter: 'blur(24px)' }
+          }),
 
-                        <div className="min-w-0 flex-1">
-                          <h3 className="font-bold text-white text-base group-hover:text-indigo-300 transition-colors leading-snug truncate">
-                            {member.name}
-                          </h3>
-                          <p className="text-xs text-zinc-400 truncate">{member.email}</p>
-                        </div>
-                      </div>
+          e('div', {
+            key: 'sheet',
+            onClick: (evt) => evt.stopPropagation(),
+            className: `relative z-10 cool-glass-card rounded-t-3xl sm:rounded-3xl w-full max-w-lg p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] space-y-5 h-[88vh] sm:h-auto max-h-[95vh] overflow-y-auto pb-safe border border-white/10 ${
+              isClosing ? 'animate-sheet-out' : 'animate-sheet-in'
+            }`
+          }, [
+            e('div', { key: 'handle', className: 'w-12 h-1.5 bg-zinc-700/80 rounded-full mx-auto sm:hidden mb-1' }),
 
-                      <span className={`px-2.5 py-0.5 rounded-lg font-extrabold text-[10px] border whitespace-nowrap shrink-0 ${getRoleBadge(member.role)}`}>
-                        {member.role}
-                      </span>
-                    </div>
+            e('div', { key: 'hdr', className: 'flex items-center justify-between border-b border-zinc-800/80 pb-4' }, [
+              e('div', { key: 'info', className: 'flex items-center gap-3.5 min-w-0 flex-1' }, [
+                e('div', {
+                  key: 'av',
+                  onClick: (evt) => handleOpenBigPhoto(selectedMember, evt),
+                  className: 'w-16 h-16 rounded-2xl overflow-hidden border-2 border-indigo-500 shadow-lg glow-indigo relative bg-zinc-900 flex-shrink-0 cursor-zoom-in group/modalAvatar hover:scale-105 active:scale-95 transition-transform',
+                  title: 'Tap to see big photo 🔍'
+                }, [
+                  e('img', {
+                    key: 'img',
+                    src: selectedMember.avatar,
+                    alt: selectedMember.name,
+                    onError: (evt) => handleAvatarError(evt, selectedMember),
+                    className: 'w-full h-full object-cover object-center'
+                  }),
+                  e('div', { key: 'exp', className: 'absolute inset-0 bg-indigo-600/35 opacity-0 group-hover/modalAvatar:opacity-100 transition-opacity flex flex-col items-center justify-center' }, [
+                    e('span', { key: 's1', className: 'text-sm' }, '🔍'),
+                    e('span', { key: 's2', className: 'text-[8px] text-white font-bold uppercase tracking-wider' }, 'Expand')
+                  ])
+                ]),
+                e('div', { key: 'text', className: 'min-w-0 flex-1' }, [
+                  e('h2', { key: 'name', className: 'text-lg font-black text-white truncate' }, selectedMember.name),
+                  e('p', {
+                    key: 'email',
+                    onClick: () => handleCopyToClipboard(selectedMember.email, 'email'),
+                    className: 'text-xs text-zinc-400 hover:text-indigo-300 cursor-pointer flex items-center gap-1 truncate',
+                    title: 'Click to copy email'
+                  }, [
+                    e('span', { key: 'm', className: 'truncate' }, selectedMember.email),
+                    e('span', { key: 'i', className: 'text-[10px] opacity-60 shrink-0' }, '📋')
+                  ]),
+                  e('div', { key: 'badges', className: 'flex items-center gap-2 mt-1.5' }, [
+                    e('span', { key: 'b1', className: `px-2.5 py-0.5 rounded-lg text-[10px] font-extrabold border whitespace-nowrap shrink-0 ${getRoleBadge(selectedMember.role)}` }, selectedMember.role),
+                    e('span', { key: 'b2', className: 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' }, selectedMember.status)
+                  ])
+                ])
+              ]),
 
-                    <p className={`text-xs text-zinc-400 line-clamp-2 leading-relaxed ${[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(member.id) ? 'khmer-font' : ''}`}>
-                      {member.bio}
-                    </p>
-                  </div>
+              e('button', {
+                key: 'close-x',
+                onClick: handleCloseModal,
+                className: 'text-zinc-400 hover:text-white bg-zinc-800/80 p-2 rounded-full transition-all border border-zinc-700/60 self-start hover:scale-105 active:scale-95 shrink-0 ml-2'
+              }, '✕')
+            ]),
 
-                  <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between">
-                    <div className="flex flex-wrap gap-1">
-                      {member.skills && member.skills.slice(0, 2).map((skill, i) => (
-                        <span key={i} className="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-400 px-2 py-0.5 rounded-md font-bold">
-                          {skill}
-                        </span>
-                      ))}
-                      {member.skills && member.skills.length > 2 && (
-                        <span className="text-[9px] text-zinc-500 font-bold self-center">
-                          +{member.skills.length - 2}
-                        </span>
-                      )}
-                    </div>
+            /* Connected Socials */
+            e('div', { key: 'socials-sec' }, [
+              e('h4', { key: 'lbl', className: 'text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2.5' }, 'Connected Socials'),
+              e('div', { key: 'links', className: 'flex flex-wrap gap-2.5 text-xs' }, [
+                selectedMember.socials?.instagram && e('a', {
+                  key: 'ig',
+                  href: selectedMember.socials?.instagramUrl || `https://instagram.com/${selectedMember.socials?.instagram}`,
+                  target: '_blank',
+                  rel: 'noopener noreferrer',
+                  className: 'flex-1 min-w-[110px] flex flex-col items-center justify-center p-3 rounded-2xl bg-gradient-to-b from-pink-500/10 to-rose-500/5 border border-pink-500/30 hover:border-pink-500/70 hover:bg-pink-500/15 transition-all text-center group active:scale-95'
+                }, [
+                  e('svg', { key: 'i', className: 'w-5 h-5 text-pink-400 mb-1 group-hover:scale-110 transition-transform', fill: 'currentColor', viewBox: '0 0 24 24' },
+                    e('path', { d: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.067 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z' })
+                  ),
+                  e('span', { key: 't', className: 'font-extrabold text-white block truncate w-full' }, 'Instagram'),
+                  e('span', { key: 'u', className: 'text-[10px] text-pink-300/80 truncate w-full' }, `@${selectedMember.socials?.instagram}`)
+                ]),
 
-                    <span className="text-xs font-bold text-indigo-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                      Inspect &rarr;
-                    </span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12 text-zinc-500 text-xs cool-glass-card rounded-2xl">
-                No team members matching your search query.
-              </div>
-            )}
-          </div>
+                selectedMember.socials?.facebook && e('a', {
+                  key: 'fb',
+                  href: selectedMember.socials?.facebookUrl || `https://facebook.com/${selectedMember.socials?.facebook}`,
+                  target: '_blank',
+                  rel: 'noopener noreferrer',
+                  className: 'flex-1 min-w-[110px] flex flex-col items-center justify-center p-3 rounded-2xl bg-gradient-to-b from-blue-500/10 to-indigo-500/5 border border-blue-500/30 hover:border-blue-500/70 hover:bg-blue-500/15 transition-all text-center group active:scale-95'
+                }, [
+                  e('svg', { key: 'i', className: 'w-5 h-5 text-blue-400 mb-1 group-hover:scale-110 transition-transform', fill: 'currentColor', viewBox: '0 0 24 24' },
+                    e('path', { d: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' })
+                  ),
+                  e('span', { key: 't', className: 'font-extrabold text-white block truncate w-full' }, 'Facebook'),
+                  e('span', { key: 'u', className: 'text-[10px] text-blue-300/80 truncate w-full' }, 'Profile')
+                ]),
 
-          {selectedMember && (
-            <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
-              {/* Full Viewport Frosted Blur Backdrop */}
-              <div
-                onClick={handleCloseModal}
-                className={`fixed inset-0 bg-[#08090e]/65 backdrop-blur-2xl ${
-                  isClosing ? 'animate-backdrop-out' : 'animate-backdrop-in'
-                }`}
-                style={{ WebkitBackdropFilter: 'blur(24px)' }}
-              />
+                selectedMember.socials?.tiktok && e('a', {
+                  key: 'tk',
+                  href: selectedMember.socials?.tiktokUrl || `https://tiktok.com/${selectedMember.socials?.tiktok}`,
+                  target: '_blank',
+                  rel: 'noopener noreferrer',
+                  className: 'flex-1 min-w-[110px] flex flex-col items-center justify-center p-3 rounded-2xl bg-gradient-to-b from-cyan-500/10 to-teal-500/5 border border-cyan-500/30 hover:border-cyan-500/70 hover:bg-cyan-500/15 transition-all text-center group active:scale-95'
+                }, [
+                  e('svg', { key: 'i', className: 'w-5 h-5 text-cyan-400 mb-1 group-hover:scale-110 transition-transform', fill: 'currentColor', viewBox: '0 0 24 24' },
+                    e('path', { d: 'M12.525.001c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.98-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.82.57-1.31 1.56-1.3 2.56.01.76.32 1.5.87 2.03.62.61 1.52.93 2.38.83 1.05-.08 2.03-.74 2.47-1.7.27-.58.37-1.24.36-1.88.02-4.81.01-9.62.01-14.43z' })
+                  ),
+                  e('span', { key: 't', className: 'font-extrabold text-white block truncate w-full' }, 'TikTok'),
+                  e('span', { key: 'u', className: 'text-[10px] text-cyan-300/80 truncate w-full' }, selectedMember.socials?.tiktok)
+                ])
+              ])
+            ]),
 
-              {/* Transformed Sheet Content Layer */}
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className={`relative z-10 cool-glass-card rounded-t-3xl sm:rounded-3xl w-full max-w-lg p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] space-y-5 h-[88vh] sm:h-auto max-h-[95vh] overflow-y-auto pb-safe border border-white/10 ${
-                  isClosing ? 'animate-sheet-out' : 'animate-sheet-in'
-                }`}
-              >
-                <div className="w-12 h-1.5 bg-zinc-700/80 rounded-full mx-auto sm:hidden mb-1" />
+            /* About Section */
+            e('div', { key: 'about-sec' }, [
+              e('h4', { key: 'lbl', className: 'text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1.5' }, 'About'),
+              e('p', { key: 'txt', className: `text-xs text-zinc-300 leading-relaxed bg-zinc-950/80 p-3.5 rounded-2xl border border-zinc-800/80 ${[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(selectedMember.id) ? 'khmer-font text-sm' : ''}` }, selectedMember.bio)
+            ]),
 
-                <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
-                  <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                    
-                    {/* Big Photo Tap Target in Modal */}
-                    <div 
-                      onClick={(e) => handleOpenBigPhoto(selectedMember, e)}
-                      className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-indigo-500 shadow-lg glow-indigo relative bg-zinc-900 flex-shrink-0 cursor-zoom-in group/modalAvatar hover:scale-105 active:scale-95 transition-transform"
-                      title="Tap to see big photo 🔍"
-                    >
-                      <img
-                        src={selectedMember.avatar}
-                        alt={selectedMember.name}
-                        onError={(e) => handleAvatarError(e, selectedMember)}
-                        className="w-full h-full object-cover object-center"
-                      />
-                      <div className="absolute inset-0 bg-indigo-600/35 opacity-0 group-hover/modalAvatar:opacity-100 transition-opacity flex flex-col items-center justify-center">
-                        <span className="text-sm">🔍</span>
-                        <span className="text-[8px] text-white font-bold uppercase tracking-wider">Expand</span>
-                      </div>
-                    </div>
+            /* Skills Section */
+            selectedMember.skills && e('div', { key: 'skills-sec' }, [
+              e('h4', { key: 'lbl', className: 'text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2' }, 'Skills & Expertise'),
+              e('div', { key: 'list', className: 'flex flex-wrap gap-1.5' },
+                selectedMember.skills.map((skill, index) =>
+                  e('span', { key: index, className: 'bg-indigo-500/10 text-indigo-300 text-xs px-3 py-1 rounded-xl border border-indigo-500/30 font-bold' }, skill)
+                )
+              )
+            ]),
 
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <h2 className="text-lg font-black text-white truncate">{selectedMember.name}</h2>
-                      </div>
+            /* Close Profile Button (Hidden on Mobile, Visible on Desktop) */
+            e('div', { key: 'btn-wrap', className: 'pt-2 hidden sm:block' },
+              e('button', {
+                onClick: handleCloseModal,
+                className: 'w-full py-3 bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 active:from-indigo-600 active:to-violet-700 text-white text-xs font-black rounded-2xl transition-all shadow-lg shadow-indigo-500/25'
+              }, 'Close Profile')
+            )
+          ])
+        ]),
 
-                      <p 
-                        onClick={() => handleCopyToClipboard(selectedMember.email, "email")}
-                        className="text-xs text-zinc-400 hover:text-indigo-300 cursor-pointer flex items-center gap-1 truncate"
-                        title="Click to copy email"
-                      >
-                        <span className="truncate">{selectedMember.email}</span>
-                        <span className="text-[10px] opacity-60 shrink-0">📋</span>
-                      </p>
-                      
-                      <div className="flex items-center gap-2 mt-1.5">
-                        <span className={`px-2.5 py-0.5 rounded-lg text-[10px] font-extrabold border whitespace-nowrap shrink-0 ${getRoleBadge(selectedMember.role)}`}>
-                          {selectedMember.role}
-                        </span>
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                          {selectedMember.status}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+        /* Modals & Toasts */
+        e(BigPhotoViewerModal, {
+          key: 'photo-viewer',
+          photoData: expandedPhoto,
+          onClose: () => setExpandedPhoto(null),
+          onError: handleAvatarError
+        }),
 
-                  <button
-                    onClick={handleCloseModal}
-                    className="text-zinc-400 hover:text-white bg-zinc-800/80 p-2 rounded-full transition-all border border-zinc-700/60 self-start hover:scale-105 active:scale-95 shrink-0 ml-2"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                {/* Connected Socials */}
-                <div>
-                  <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2.5">Connected Socials</h4>
-                  <div className="flex flex-wrap gap-2.5 text-xs">
-                    
-                    {selectedMember.socials?.instagram && (
-                      <a
-                        href={selectedMember.socials?.instagramUrl || `https://instagram.com/${selectedMember.socials?.instagram}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 min-w-[110px] flex flex-col items-center justify-center p-3 rounded-2xl bg-gradient-to-b from-pink-500/10 to-rose-500/5 border border-pink-500/30 hover:border-pink-500/70 hover:bg-pink-500/15 transition-all text-center group active:scale-95"
-                      >
-                        <svg className="w-5 h-5 text-pink-400 mb-1 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.067 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                        </svg>
-                        <span className="font-extrabold text-white block truncate w-full">Instagram</span>
-                        <span className="text-[10px] text-pink-300/80 truncate w-full">@{selectedMember.socials?.instagram}</span>
-                      </a>
-                    )}
-
-                    {selectedMember.socials?.facebook && (
-                      <a
-                        href={selectedMember.socials?.facebookUrl || `https://facebook.com/${selectedMember.socials?.facebook}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 min-w-[110px] flex flex-col items-center justify-center p-3 rounded-2xl bg-gradient-to-b from-blue-500/10 to-indigo-500/5 border border-blue-500/30 hover:border-blue-500/70 hover:bg-blue-500/15 transition-all text-center group active:scale-95"
-                      >
-                        <svg className="w-5 h-5 text-blue-400 mb-1 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                        </svg>
-                        <span className="font-extrabold text-white block truncate w-full">Facebook</span>
-                        <span className="text-[10px] text-blue-300/80 truncate w-full">Profile</span>
-                      </a>
-                    )}
-
-                    {selectedMember.socials?.tiktok && (
-                      <a
-                        href={selectedMember.socials?.tiktokUrl || `https://tiktok.com/${selectedMember.socials?.tiktok}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 min-w-[110px] flex flex-col items-center justify-center p-3 rounded-2xl bg-gradient-to-b from-cyan-500/10 to-teal-500/5 border border-cyan-500/30 hover:border-cyan-500/70 hover:bg-cyan-500/15 transition-all text-center group active:scale-95"
-                      >
-                        <svg className="w-5 h-5 text-cyan-400 mb-1 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12.525.001c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.98-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.82.57-1.31 1.56-1.3 2.56.01.76.32 1.5.87 2.03.62.61 1.52.93 2.38.83 1.05-.08 2.03-.74 2.47-1.7.27-.58.37-1.24.36-1.88.02-4.81.01-9.62.01-14.43z"/>
-                        </svg>
-                        <span className="font-extrabold text-white block truncate w-full">TikTok</span>
-                        <span className="text-[10px] text-cyan-300/80 truncate w-full">{selectedMember.socials?.tiktok}</span>
-                      </a>
-                    )}
-
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1.5">About</h4>
-                  <p className={`text-xs text-zinc-300 leading-relaxed bg-zinc-950/80 p-3.5 rounded-2xl border border-zinc-800/80 ${[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(selectedMember.id) ? 'khmer-font text-sm' : ''}`}>
-                    {selectedMember.bio}
-                  </p>
-                </div>
-
-                {selectedMember.skills && (
-                  <div>
-                    <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2">Skills & Expertise</h4>
-                    <div className="flex flex-wrap gap-1.5">
-                      {selectedMember.skills.map((skill, index) => (
-                        <span
-                          key={index}
-                          className="bg-indigo-500/10 text-indigo-300 text-xs px-3 py-1 rounded-xl border border-indigo-500/30 font-bold"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Close Profile Button (Hidden on Mobile/Device Mode) */}
-                <div className="pt-2 hidden sm:block">
-                  <button
-                    onClick={handleCloseModal}
-                    className="w-full py-3 bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 active:from-indigo-600 active:to-violet-700 text-white text-xs font-black rounded-2xl transition-all shadow-lg shadow-indigo-500/25"
-                  >
-                    Close Profile
-                  </button>
-                </div>
-
-              </div>
-            </div>
-          )}
-
-          <BigPhotoViewerModal
-            photoData={expandedPhoto}
-            onClose={() => setExpandedPhoto(null)}
-            onError={handleAvatarError}
-          />
-
-          <Toast
-            toast={toast}
-            onClose={handleCloseToast}
-          />
-
-        </div>
-      );
+        e(Toast, {
+          key: 'toast',
+          toast: toast,
+          onClose: handleCloseToast
+        })
+      ]);
     }
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<MemberDashboard />);
+    root.render(e(MemberDashboard));
   </script>
 
 </body>
