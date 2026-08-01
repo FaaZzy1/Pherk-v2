@@ -398,6 +398,7 @@ export default function App() {
   const [isClosing, setIsClosing] = useState(false);
   const [toast, setToast] = useState(null);
   const [sessionBoost, setSessionBoost] = useState(0);
+  const [appIsLoading, setAppIsLoading] = useState(true);
 
   const [cheersCount, setCheersCount] = useState(() => {
     try {
@@ -409,6 +410,14 @@ export default function App() {
   });
   const [isClinking, setIsClinking] = useState(false);
   const [isDecaying, setIsDecaying] = useState(false);
+
+  // Smooth App Load Transition for iOS Safari
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAppIsLoading(false);
+    }, 280);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     try {
@@ -457,25 +466,26 @@ export default function App() {
     });
   };
 
+  // Optimized Particle Canvas Loop for iOS Safari
   useEffect(() => {
+    let animationFrameId;
     const timer = setTimeout(() => {
       const canvas = document.getElementById('particle-canvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
-      let animationFrameId;
 
       let width = canvas.width = window.innerWidth;
       let height = canvas.height = window.innerHeight;
 
       const isMobile = window.innerWidth < 768;
-      const particleCount = isMobile ? 18 : 50;
-      const maxDistance = isMobile ? 100 : 150;
+      const particleCount = isMobile ? 12 : 35;
+      const maxDistance = isMobile ? 90 : 140;
 
       const particles = Array.from({ length: particleCount }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: (Math.random() - 0.5) * 0.45,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
         radius: Math.random() * 1.5 + 1
       }));
 
@@ -511,7 +521,7 @@ export default function App() {
               ctx.beginPath();
               ctx.moveTo(p.x, p.y);
               ctx.lineTo(p2.x, p2.y);
-              ctx.strokeStyle = `rgba(99, 102, 241, ${0.16 * (1 - dist / maxDistance)})`;
+              ctx.strokeStyle = `rgba(99, 102, 241, ${0.14 * (1 - dist / maxDistance)})`;
               ctx.lineWidth = 0.8;
               ctx.stroke();
             }
@@ -522,9 +532,12 @@ export default function App() {
       };
 
       render();
-    }, 120);
+    }, 100);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
   }, []);
 
   const handleCloseModal = () => {
@@ -616,6 +629,17 @@ export default function App() {
       target.src = `https://placehold.co/600x600/4f46e5/ffffff?text=${initials}`;
     }
   };
+
+  if (appIsLoading) {
+    return (
+      <div className="fixed inset-0 z-[500] bg-[#08090e] flex flex-col items-center justify-center space-y-4">
+        <div className="w-12 h-12 rounded-full border-4 border-indigo-500/20 border-t-indigo-500 border-r-purple-500 animate-spin" />
+        <span className="text-xs font-black tracking-widest text-indigo-300 uppercase animate-pulse">
+          Loading Dashboard...
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-[#08090e]">

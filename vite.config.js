@@ -1,12 +1,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// The smart logic: We dynamically set the base path.
-// When GITHUB_ACTIONS environment variable is present, it's building for GitHub Pages.
-const base_path = process.env.GITHUB_ACTIONS ? '/Pherk-v2/' : '/';
+// Strictly detect if running inside GitHub Actions deployment
+const isGitHubPages = process.env.GITHUB_ACTIONS === 'true';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: base_path, // Uses the smart path here
+  // Uses root '/' for Vercel & local dev, and '/Pherk-v2/' only for GitHub Pages
+  base: isGitHubPages ? '/Pherk-v2/' : '/',
 });
