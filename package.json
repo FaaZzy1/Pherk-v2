@@ -1,0 +1,24 @@
+{
+  "name": "pherk-v2",
+  "version": "1.0.0",
+  "description": "Team Directory Hub - Pherk v2",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "test": "echo \"No tests specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FaaZzy1/Pherk-v2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FaaZzy1/Pherk-v2/issues"
+  },
+  "homepage": "https://github.com/FaaZzy1/Pherk-v2#readme",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}

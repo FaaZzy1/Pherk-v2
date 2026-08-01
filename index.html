@@ -58,6 +58,30 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Germania+One&family=Koulen&family=Siemreap&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+  <!-- Vercel Speed Insights -->
+  <script>
+    (function() {
+      // Initialize Speed Insights queue
+      if (window.si) return;
+      window.si = function() {
+        (window.siq = window.siq || []).push(arguments);
+      };
+      
+      // Inject Speed Insights script
+      const script = document.createElement('script');
+      script.defer = true;
+      script.src = '/_vercel/speed-insights/script.js';
+      script.dataset.sdkn = '@vercel/speed-insights';
+      script.dataset.sdkv = '2.0.0';
+      
+      script.onerror = function() {
+        console.log('[Vercel Speed Insights] Failed to load. Speed Insights is only available when deployed to Vercel.');
+      };
+      
+      document.head.appendChild(script);
+    })();
+  </script>
+
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
