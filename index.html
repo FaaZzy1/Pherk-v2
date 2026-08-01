@@ -1,11 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background-color: #08090e !important;">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Team Directory Hub - Pherk v2</title>
-  
-  <!-- Optimized CDNs -->
+
+  <!-- Immediate Dark Background Guard (Prevents iOS White Flash) -->
+  <style>
+    html, body {
+      background-color: #08090e !important;
+      color: #f4f4f5 !important;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100vh;
+    }
+    #root {
+      background-color: #08090e !important;
+      min-height: 100vh;
+    }
+  </style>
+
+  <!-- Optimized Production CDNs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js" crossorigin></script>
@@ -16,8 +32,6 @@
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #08090e;
-      color: #f4f4f5;
     }
 
     .cool-title-font {
@@ -144,8 +158,8 @@
   <!-- Background Particle Canvas -->
   <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
-  <!-- Root with Instant Mobile Preloader Skeleton -->
-  <div id="root" class="relative z-10">
+  <!-- Root with Instant Dark Skeleton Preloader -->
+  <div id="root" class="relative z-10 bg-[#08090e] min-h-screen">
     <div class="min-h-screen flex flex-col items-center justify-center space-y-4 p-4 text-center">
       <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center animate-pulse glow-indigo">
         <span class="text-xl">🍻</span>
