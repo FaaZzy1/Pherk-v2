@@ -594,18 +594,18 @@ export default function App() {
     const step = parseInt(target.dataset.step || "0", 10);
     
     let fallbacks = [];
-    if (member?.id === 1) fallbacks = ["/images/photo1.jpg", "/images/photo1.png", "/images/photo1.jpeg", "/images/photo1"];
-    else if (member?.id === 2) fallbacks = ["/images/photo5.jpg", "/images/photo5.png", "/images/photo5.jpeg", "/images/photo5"];
-    else if (member?.id === 3) fallbacks = ["/images/photo7.jpg", "/images/photo7.png", "/images/photo7.jpeg", "/images/photo7"];
-    else if (member?.id === 4) fallbacks = ["/images/photo10.jpg", "/images/photo10.png", "/images/photo10.jpeg", "/images/photo10"];
-    else if (member?.id === 5) fallbacks = ["/images/photo8.jpg", "/images/photo8.png", "/images/photo8.jpeg", "/images/photo8"];
-    else if (member?.id === 6) fallbacks = ["/images/photo2.jpg", "/images/photo2.png", "/images/photo2.jpeg", "/images/photo2"];
-    else if (member?.id === 7) fallbacks = ["/images/photo11.jpg", "/images/photo11.png", "/images/photo11.jpeg", "/images/photo11"];
-    else if (member?.id === 8) fallbacks = ["/images/photo9.jpg", "/images/photo9.png", "/images/photo9.jpeg", "/images/photo9"];
-    else if (member?.id === 9) fallbacks = ["/images/photo12.jpg", "/images/photo12.png", "/images/photo12.jpeg", "/images/photo12"];
-    else if (member?.id === 10) fallbacks = ["/images/photo3.jpg", "/images/photo3.png", "/images/photo3.jpeg", "/images/photo3"];
-    else if (member?.id === 11) fallbacks = ["/images/photo4.jpg", "/images/photo4.png", "/images/photo4.jpeg", "/images/photo4"];
-    else if (member?.id === 12) fallbacks = ["/images/photo6.jpg", "/images/photo6.png", "/images/photo6.jpeg", "/images/photo6"];
+    if (member?.id === 1) fallbacks = ["images/photo1.jpg", "images/photo1.png", "images/photo1.jpeg", "images/photo1"];
+    else if (member?.id === 2) fallbacks = ["images/photo5.jpg", "images/photo5.png", "images/photo5.jpeg", "images/photo5"];
+    else if (member?.id === 3) fallbacks = ["images/photo7.jpg", "images/photo7.png", "images/photo7.jpeg", "images/photo7"];
+    else if (member?.id === 4) fallbacks = ["images/photo10.jpg", "images/photo10.png", "images/photo10.jpeg", "images/photo10"];
+    else if (member?.id === 5) fallbacks = ["images/photo8.jpg", "images/photo8.png", "images/photo8.jpeg", "images/photo8"];
+    else if (member?.id === 6) fallbacks = ["images/photo2.jpg", "images/photo2.png", "images/photo2.jpeg", "images/photo2"];
+    else if (member?.id === 7) fallbacks = ["images/photo11.jpg", "images/photo11.png", "images/photo11.jpeg", "images/photo11"];
+    else if (member?.id === 8) fallbacks = ["images/photo9.jpg", "images/photo9.png", "images/photo9.jpeg", "images/photo9"];
+    else if (member?.id === 9) fallbacks = ["images/photo12.jpg", "images/photo12.png", "images/photo12.jpeg", "images/photo12"];
+    else if (member?.id === 10) fallbacks = ["images/photo3.jpg", "images/photo3.png", "images/photo3.jpeg", "images/photo3"];
+    else if (member?.id === 11) fallbacks = ["images/photo4.jpg", "images/photo4.png", "images/photo4.jpeg", "images/photo4"];
+    else if (member?.id === 12) fallbacks = ["images/photo6.jpg", "images/photo6.png", "images/photo6.jpeg", "images/photo6"];
 
     if (step < fallbacks.length) {
       target.dataset.step = (step + 1).toString();
