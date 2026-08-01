@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Team Directory Hub - Pherk v2</title>
   
-  <!-- Optimized Production CDNs for Fast Mobile Loading -->
+  <!-- Optimized CDNs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js" crossorigin></script>
@@ -14,30 +14,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Germania+One&family=Koulen&family=Siemreap&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
-    @font-face {
-      font-family: 'GermaniaOne-Local';
-      src: url('GermaniaOne-Regular.ttf') format('truetype'),
-           url('file:///E:/Code/GermaniaOne-Regular.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-    @font-face {
-      font-family: 'Koulen-Local';
-      src: url('Koulen-Regular.ttf') format('truetype'),
-           url('file:///E:/Code/Koulen-Regular.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-    @font-face {
-      font-family: 'Siemreap-Local';
-      src: url('Siemreap-Regular.ttf') format('truetype'),
-           url('file:///E:/Code/Siemreap-Regular.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
-
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #08090e;
@@ -45,11 +21,11 @@
     }
 
     .cool-title-font {
-      font-family: 'GermaniaOne-Local', 'Germania One', cursive, sans-serif;
+      font-family: 'Germania One', cursive, sans-serif;
     }
 
     .khmer-font {
-      font-family: 'Siemreap-Local', 'Siemreap', 'Koulen-Local', 'Koulen', sans-serif;
+      font-family: 'Siemreap', 'Koulen', sans-serif;
     }
 
     * { 
@@ -168,7 +144,18 @@
   <!-- Background Particle Canvas -->
   <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
-  <div id="root" class="relative z-10"></div>
+  <!-- Root with Instant Mobile Preloader Skeleton -->
+  <div id="root" class="relative z-10">
+    <div class="min-h-screen flex flex-col items-center justify-center space-y-4 p-4 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center animate-pulse glow-indigo">
+        <span class="text-xl">🍻</span>
+      </div>
+      <div class="space-y-1">
+        <h2 class="text-lg font-bold text-white tracking-wide">Pherk Hub v2</h2>
+        <p class="text-xs text-indigo-400/80 font-medium">Loading directory...</p>
+      </div>
+    </div>
+  </div>
 
   <script type="text/babel">
     let sharedAudioCtx = null;
@@ -633,75 +620,75 @@
         });
       };
 
+      // Deferred particle canvas for mobile CPU optimization
       useEffect(() => {
-        const canvas = document.getElementById('particle-canvas');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        let animationFrameId;
+        const timer = setTimeout(() => {
+          const canvas = document.getElementById('particle-canvas');
+          if (!canvas) return;
+          const ctx = canvas.getContext('2d');
+          let animationFrameId;
 
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
+          let width = canvas.width = window.innerWidth;
+          let height = canvas.height = window.innerHeight;
 
-        const isMobile = window.innerWidth < 768;
-        const particleCount = isMobile ? 25 : 55;
-        const maxDistance = isMobile ? 110 : 150;
+          const isMobile = window.innerWidth < 768;
+          const particleCount = isMobile ? 18 : 50;
+          const maxDistance = isMobile ? 100 : 150;
 
-        const particles = Array.from({ length: particleCount }, () => ({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.45,
-          vy: (Math.random() - 0.5) * 0.45,
-          radius: Math.random() * 1.5 + 1
-        }));
+          const particles = Array.from({ length: particleCount }, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.45,
+            vy: (Math.random() - 0.5) * 0.45,
+            radius: Math.random() * 1.5 + 1
+          }));
 
-        const handleResize = () => {
-          width = canvas.width = window.innerWidth;
-          height = canvas.height = window.innerHeight;
-        };
+          const handleResize = () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+          };
 
-        window.addEventListener('resize', handleResize);
+          window.addEventListener('resize', handleResize);
 
-        const render = () => {
-          ctx.clearRect(0, 0, width, height);
+          const render = () => {
+            ctx.clearRect(0, 0, width, height);
 
-          particles.forEach((p, i) => {
-            p.x += p.vx;
-            p.y += p.vy;
+            particles.forEach((p, i) => {
+              p.x += p.vx;
+              p.y += p.vy;
 
-            if (p.x < 0 || p.x > width) p.vx *= -1;
-            if (p.y < 0 || p.y > height) p.vy *= -1;
+              if (p.x < 0 || p.x > width) p.vx *= -1;
+              if (p.y < 0 || p.y > height) p.vy *= -1;
 
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(129, 140, 248, 0.45)';
-            ctx.fill();
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+              ctx.fillStyle = 'rgba(129, 140, 248, 0.45)';
+              ctx.fill();
 
-            for (let j = i + 1; j < particles.length; j++) {
-              const p2 = particles[j];
-              const dx = p.x - p2.x;
-              const dy = p.y - p2.y;
-              const dist = Math.sqrt(dx * dx + dy * dy);
+              for (let j = i + 1; j < particles.length; j++) {
+                const p2 = particles[j];
+                const dx = p.x - p2.x;
+                const dy = p.y - p2.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
 
-              if (dist < maxDistance) {
-                ctx.beginPath();
-                ctx.moveTo(p.x, p.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.strokeStyle = `rgba(99, 102, 241, ${0.16 * (1 - dist / maxDistance)})`;
-                ctx.lineWidth = 0.8;
-                ctx.stroke();
+                if (dist < maxDistance) {
+                  ctx.beginPath();
+                  ctx.moveTo(p.x, p.y);
+                  ctx.lineTo(p2.x, p2.y);
+                  ctx.strokeStyle = `rgba(99, 102, 241, ${0.16 * (1 - dist / maxDistance)})`;
+                  ctx.lineWidth = 0.8;
+                  ctx.stroke();
+                }
               }
-            }
-          });
+            });
 
-          animationFrameId = requestAnimationFrame(render);
-        };
+            animationFrameId = requestAnimationFrame(render);
+          };
 
-        render();
+          render();
+        }, 120);
 
-        return () => {
-          window.removeEventListener('resize', handleResize);
-          cancelAnimationFrame(animationFrameId);
-        };
+        return () => clearTimeout(timer);
       }, []);
 
       const handleCloseModal = () => {
@@ -772,77 +759,29 @@
         
         let fallbacks = [];
         if (member?.id === 1) {
-          fallbacks = [
-            "images/photo1.jpg", "images/photo1.png", "images/photo1.jpeg", "images/photo1",
-            "photo1.jpg", "photo1.png", "photo1",
-            "file:///E:/Code/images/photo1", "file:///E:/Code/images/photo1.jpg", "file:///E:/Code/images/photo1.png"
-          ];
+          fallbacks = ["images/photo1.jpg", "images/photo1.png", "images/photo1.jpeg", "images/photo1"];
         } else if (member?.id === 2) {
-          fallbacks = [
-            "images/photo5.jpg", "images/photo5.png", "images/photo5.jpeg", "images/photo5",
-            "photo5.jpg", "photo5.png", "photo5",
-            "file:///E:/Code/images/photo5", "file:///E:/Code/images/photo5.jpg", "file:///E:/Code/images/photo5.png"
-          ];
+          fallbacks = ["images/photo5.jpg", "images/photo5.png", "images/photo5.jpeg", "images/photo5"];
         } else if (member?.id === 3) {
-          fallbacks = [
-            "images/photo7.jpg", "images/photo7.png", "images/photo7.jpeg", "images/photo7",
-            "photo7.jpg", "photo7.png", "photo7",
-            "file:///E:/Code/images/photo7", "file:///E:/Code/images/photo7.jpg", "file:///E:/Code/images/photo7.png"
-          ];
+          fallbacks = ["images/photo7.jpg", "images/photo7.png", "images/photo7.jpeg", "images/photo7"];
         } else if (member?.id === 4) {
-          fallbacks = [
-            "images/photo10.jpg", "images/photo10.png", "images/photo10.jpeg", "images/photo10",
-            "photo10.jpg", "photo10.png", "photo10",
-            "file:///E:/Code/images/photo10", "file:///E:/Code/images/photo10.jpg", "file:///E:/Code/images/photo10.png"
-          ];
+          fallbacks = ["images/photo10.jpg", "images/photo10.png", "images/photo10.jpeg", "images/photo10"];
         } else if (member?.id === 5) {
-          fallbacks = [
-            "images/photo8.jpg", "images/photo8.png", "images/photo8.jpeg", "images/photo8",
-            "photo8.jpg", "photo8.png", "photo8",
-            "file:///E:/Code/images/photo8", "file:///E:/Code/images/photo8.jpg", "file:///E:/Code/images/photo8.png"
-          ];
+          fallbacks = ["images/photo8.jpg", "images/photo8.png", "images/photo8.jpeg", "images/photo8"];
         } else if (member?.id === 6) {
-          fallbacks = [
-            "images/photo2.jpg", "images/photo2.png", "images/photo2.jpeg", "images/photo2",
-            "photo2.jpg", "photo2.png", "photo2",
-            "file:///E:/Code/images/photo2", "file:///E:/Code/images/photo2.jpg", "file:///E:/Code/images/photo2.png"
-          ];
+          fallbacks = ["images/photo2.jpg", "images/photo2.png", "images/photo2.jpeg", "images/photo2"];
         } else if (member?.id === 7) {
-          fallbacks = [
-            "images/photo11.jpg", "images/photo11.png", "images/photo11.jpeg", "images/photo11",
-            "photo11.jpg", "photo11.png", "photo11",
-            "file:///E:/Code/images/photo11", "file:///E:/Code/images/photo11.jpg", "file:///E:/Code/images/photo11.png"
-          ];
+          fallbacks = ["images/photo11.jpg", "images/photo11.png", "images/photo11.jpeg", "images/photo11"];
         } else if (member?.id === 8) {
-          fallbacks = [
-            "images/photo9.jpg", "images/photo9.png", "images/photo9.jpeg", "images/photo9",
-            "photo9.jpg", "photo9.png", "photo9",
-            "file:///E:/Code/images/photo9", "file:///E:/Code/images/photo9.jpg", "file:///E:/Code/images/photo9.png"
-          ];
+          fallbacks = ["images/photo9.jpg", "images/photo9.png", "images/photo9.jpeg", "images/photo9"];
         } else if (member?.id === 9) {
-          fallbacks = [
-            "images/photo12.jpg", "images/photo12.png", "images/photo12.jpeg", "images/photo12",
-            "photo12.jpg", "photo12.png", "photo12",
-            "file:///E:/Code/images/photo12", "file:///E:/Code/images/photo12.jpg", "file:///E:/Code/images/photo12.png"
-          ];
+          fallbacks = ["images/photo12.jpg", "images/photo12.png", "images/photo12.jpeg", "images/photo12"];
         } else if (member?.id === 10) {
-          fallbacks = [
-            "images/photo3.jpg", "images/photo3.png", "images/photo3.jpeg", "images/photo3",
-            "photo3.jpg", "photo3.png", "photo3",
-            "file:///E:/Code/images/photo3", "file:///E:/Code/images/photo3.jpg", "file:///E:/Code/images/photo3.png"
-          ];
+          fallbacks = ["images/photo3.jpg", "images/photo3.png", "images/photo3.jpeg", "images/photo3"];
         } else if (member?.id === 11) {
-          fallbacks = [
-            "images/photo4.jpg", "images/photo4.png", "images/photo4.jpeg", "images/photo4",
-            "photo4.jpg", "photo4.png", "photo4",
-            "file:///E:/Code/images/photo4", "file:///E:/Code/images/photo4.jpg", "file:///E:/Code/images/photo4.png"
-          ];
+          fallbacks = ["images/photo4.jpg", "images/photo4.png", "images/photo4.jpeg", "images/photo4"];
         } else if (member?.id === 12) {
-          fallbacks = [
-            "images/photo6.jpg", "images/photo6.png", "images/photo6.jpeg", "images/photo6",
-            "photo6.jpg", "photo6.png", "photo6",
-            "file:///E:/Code/images/photo6", "file:///E:/Code/images/photo6.jpg", "file:///E:/Code/images/photo6.png"
-          ];
+          fallbacks = ["images/photo6.jpg", "images/photo6.png", "images/photo6.jpeg", "images/photo6"];
         }
 
         if (step < fallbacks.length) {
