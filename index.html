@@ -15,10 +15,65 @@
 
   <!-- SVG Emoji Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍻</text></svg>" />
-  <script type="module" crossorigin src="/assets/index-WC2W9yZR.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BaJpCpwt.css">
+
+  <style>
+    /* Instant iOS Dark Theme & Smooth Native Loader */
+    html, body {
+      background-color: #08090e !important;
+      color: #f4f4f5;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .initial-ios-loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #08090e;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .loader-ring {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 3px solid rgba(129, 140, 248, 0.15);
+      border-top-color: #818cf8;
+      border-right-color: #c084fc;
+      animation: iosSpin 0.75s linear infinite;
+    }
+
+    .loader-text {
+      margin-top: 18px;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 2.5px;
+      color: #a5b4fc;
+      text-transform: uppercase;
+    }
+
+    @keyframes iosSpin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/index-yTEu23BO.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-MB8CDa_d.css">
 </head>
 <body class="bg-[#08090e] text-zinc-100 min-h-screen antialiased relative overflow-x-hidden selection:bg-indigo-500 selection:text-white">
-  <div id="root"></div>
+  <div id="root">
+    <!-- Instant fallback loader shown immediately while React bundle downloads -->
+    <div class="initial-ios-loader">
+      <div class="loader-ring"></div>
+      <p class="loader-text">
+        PHERK V2
+      </p>
+    </div>
+  </div>
 </body>
 </html>
